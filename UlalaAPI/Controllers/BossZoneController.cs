@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         /// <param name="BossZone">BossZone à insérer</param>
         public IHttpActionResult Post(BossZoneModel BossZone)
         {
-            if (BossZone == null) return BadRequest();
+            if (BossZone == null || BossZone.Boss.Id == 0 || BossZone.Zone.Id == 0) return BadRequest();
             else
             {
                 repo.Create(BossZone.ToEntity());
@@ -76,9 +76,14 @@ namespace UlalaAPI.Controllers
         /// </summary>
         /// <param name="BossZone">BossZone à insérer</param>
         /// <param name="id">Id du BossZone à modifier</param>
-        public void Put(int id, BossZoneModel BossZone)
+        public IHttpActionResult Put(int id, BossZoneModel BossZone)
         {
-            repo.Update(id, BossZone.ToEntity());
+            if (BossZone == null || BossZone.Boss.Id == 0 || BossZone.Zone.Id == 0 ||id == 0 || repo.GetOne(id)?.ToModel() == null) return BadRequest();
+            else
+            {
+                repo.Update(id, BossZone.ToEntity());
+                return Ok();
+            }
         }
         #endregion
     }

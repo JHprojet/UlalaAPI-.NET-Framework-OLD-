@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         /// <param name="E">Skill à insérer</param>
         public IHttpActionResult Post(SkillModel Skill)
         {
-            if (Skill == null) return BadRequest();
+            if (Skill == null || Skill.NomEN == null || Skill.NomFR == null || Skill.Classe.Id == 0) return BadRequest();
             else
             {
                 repo.Create(Skill.ToEntity());
@@ -92,7 +92,7 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Skill à modifier</param>
         public IHttpActionResult Put(int Id, SkillModel Skill)
         {
-            if (Skill == null || repo.GetOne(Id)?.ToModel() == null) return BadRequest();
+            if (Skill == null || Skill.NomEN == null || Skill.NomFR == null || Skill.Classe.Id == 0 || Id == 0 || repo.GetOne(Id)?.ToModel() == null) return BadRequest();
             else
             {
                 repo.Update(Id, Skill.ToEntity());

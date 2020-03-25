@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         /// <param name="E">Utilisateur à insérer</param>
         public IHttpActionResult Post(UtilisateurModel Utilisateur)
         {
-            if (Utilisateur == null) return BadRequest();
+            if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Password == null || Utilisateur.Pseudo == null) return BadRequest();
             else
             {
                 repo.Create(Utilisateur.MapTo<UtilisateurEntity>());
@@ -106,7 +106,7 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Utilisateur à modifier</param>
         public IHttpActionResult Put(int Id, UtilisateurModel Utilisateur)
         {
-            if (Utilisateur == null || repo.GetOne(Id)?.MapTo<UtilisateurModel>() == null) return BadRequest();
+            if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Password == null || Utilisateur.Pseudo == null || (Utilisateur.Role != "User" && Utilisateur.Role != "Admin") || Id == 0 || repo.GetOne(Id)?.MapTo<UtilisateurModel>() == null) return BadRequest();
             else
             {
                 repo.Update(Id, Utilisateur.MapTo<UtilisateurEntity>());

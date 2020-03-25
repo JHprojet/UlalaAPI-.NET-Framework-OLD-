@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         /// <param name="E">Jouet à insérer</param>
         public IHttpActionResult Post(JouetModel Jouet)
         {
-            if (Jouet == null) return BadRequest();
+            if (Jouet == null || Jouet.ImagePath == null || Jouet.NomFR == null || Jouet.NomEN == null) return BadRequest();
             else
             {
                 repo.Create(Jouet.MapTo<JouetEntity>());
@@ -79,7 +79,7 @@ namespace UlalaAPI.Controllers
         public IHttpActionResult Put(int Id, JouetModel Jouet)
         {
 
-            if (Jouet == null || repo.GetOne(Id)?.MapTo<JouetModel>() != null) return BadRequest();
+            if (Jouet == null || Jouet.ImagePath == null || Jouet.NomFR == null || Jouet.NomEN == null || Id == 0 || repo.GetOne(Id)?.MapTo<JouetModel>() != null) return BadRequest();
             else
             {
                 repo.Update(Id, Jouet.MapTo<JouetEntity>());

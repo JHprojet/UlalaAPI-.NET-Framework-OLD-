@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         /// <param name="E">Vote à insérer</param>
         public IHttpActionResult Post(VoteModel Vote)
         {
-            if (Vote == null) return BadRequest();
+            if (Vote == null || Vote.Enregistrement.Id == 0 || Vote.Utilisateur.Id == 0) return BadRequest();
             else
             {
                 repo.Create(Vote.ToEntity());
@@ -78,7 +78,7 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Vote à modifier</param>
         public IHttpActionResult Put(int Id, VoteModel Vote)
         {
-            if (Vote == null || repo.GetOne(Id)?.ToModel() == null) return BadRequest();
+            if (Vote == null || Vote.Enregistrement.Id == 0 || Vote.Utilisateur.Id == 0 || Id == 0 || repo.GetOne(Id)?.ToModel() == null) return BadRequest();
             else
             {
                 repo.Update(Id, Vote.ToEntity());

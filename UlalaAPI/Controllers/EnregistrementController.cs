@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         /// <param name="Enregistrement">Enregistrement à insérer</param>
         public IHttpActionResult Post(EnregistrementModel Enregistrement)
         {
-            if (Enregistrement == null) return BadRequest();
+            if (Enregistrement == null || Enregistrement.ImagePath1 == null || Enregistrement.ImagePath2 == null || Enregistrement.ImagePath3 == null || Enregistrement.ImagePath4 == null || Enregistrement.Team.Id == 0 || Enregistrement.Utilisateur.Id == 0 || Enregistrement.BossZone.Id == 0) return BadRequest();
             else
             {
                 repo.Create(Enregistrement.ToEntity());
@@ -76,9 +76,15 @@ namespace UlalaAPI.Controllers
         /// </summary>
         /// <param name="Enregistrement">Enregistrement à insérer</param>
         /// <param name="id">Id de l'Enregistrement à modifier</param>
-        public void Put(int id, EnregistrementModel Enregistrement)
+        public IHttpActionResult Put(int id, EnregistrementModel Enregistrement)
         {
-            repo.Update(id, Enregistrement.ToEntity());
+
+            if (Enregistrement == null || Enregistrement.ImagePath1 == null || Enregistrement.ImagePath2 == null || Enregistrement.ImagePath3 == null || Enregistrement.ImagePath4 == null || Enregistrement.Team.Id == 0 || Enregistrement.Utilisateur.Id == 0 || Enregistrement.BossZone.Id == 0 || id == 0 || repo.GetOne(id)?.ToModel() == null ) return BadRequest();
+            else
+            {
+                repo.Update(id, Enregistrement.ToEntity());
+                return Ok();
+            }
         }
         #endregion
 

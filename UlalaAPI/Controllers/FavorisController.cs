@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         /// <param name="Favori">Favori à insérer</param>
         public IHttpActionResult Post(FavoriModel Favori)
         {
-            if (Favori == null) return BadRequest();
+            if (Favori == null || Favori.Utilisateur.Id == 0 || Favori.Enregistrement.Id == 0) return BadRequest();
             else
             {
                 repo.Create(Favori.ToEntity());
@@ -90,9 +90,14 @@ namespace UlalaAPI.Controllers
         /// </summary>
         /// <param name="Favori">Favori à insérer</param>
         /// <param name="Id">Id du Favori à modifier</param>
-        public void Put(int Id, FavoriModel Favori)
+        public IHttpActionResult Put(int Id, FavoriModel Favori)
         {
-            repo.Update(Id, Favori.ToEntity());
+            if (Favori == null || Favori.Utilisateur.Id == 0 || Favori.Enregistrement.Id == 0 || Id == 0 || repo.GetOne(Id)?.MapTo<JouetModel>() == null) return BadRequest();
+            else
+            {
+                repo.Update(Id, Favori.ToEntity());
+                return Ok();
+            }
         }
         #endregion
     }

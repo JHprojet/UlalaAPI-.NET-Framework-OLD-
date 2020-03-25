@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         /// <param name="E">Team à insérer</param>
         public IHttpActionResult Post(MesTeamsModel MaTeam)
         {
-            if (MaTeam == null) return BadRequest();
+            if (MaTeam == null || MaTeam.Team.Id == 0 || MaTeam.Zone.Id == 0 || MaTeam.Utilisateur.Id == 0 || MaTeam.NomTeam == null) return BadRequest();
             else
             {
                 repo.Create(MaTeam.ToEntity());
@@ -92,7 +92,7 @@ namespace UlalaAPI.Controllers
         /// <param name="id">Id de la team à modifier</param>
         public IHttpActionResult Put(int id, MesTeamsModel MaTeam)
         {
-            if (MaTeam == null || repo.GetOne(id)?.ToModel() == null) return BadRequest();
+            if (MaTeam == null || MaTeam.Team.Id == 0 || MaTeam.Zone.Id == 0 || MaTeam.Utilisateur.Id == 0 || MaTeam.NomTeam == null || id == 0 || repo.GetOne(id)?.ToModel() == null) return BadRequest();
             else
             {
                 repo.Update(id, MaTeam.ToEntity());

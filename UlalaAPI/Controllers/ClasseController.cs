@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         /// <param name="Classe">Classe à insérer</param>
         public IHttpActionResult Post(ClasseModel Classe)
         {
-            if (Classe == null) return BadRequest();
+            if (Classe == null || Classe.NomEN == null || Classe.NomFR == null) return BadRequest();
             else
             {
                 repo.Create(Classe.MapTo<ClasseEntity>());
@@ -76,9 +76,14 @@ namespace UlalaAPI.Controllers
         /// </summary>
         /// <param name="Classe">Classe à insérer</param>
         /// <param name="id">Id de la Classe à modifier</param>
-        public void Put(int id, ClasseModel Classe)
+        public IHttpActionResult Put(int id, ClasseModel Classe)
         {
-            repo.Update(id, Classe.MapTo<ClasseEntity>());
+            if (Classe == null || Classe.NomEN == null || Classe.NomFR == null || id == 0 || repo.GetOne(id)?.MapTo<ClasseModel>() == null) return BadRequest();
+            else
+            {
+                repo.Update(id, Classe.MapTo<ClasseEntity>());
+                return Ok();
+            }
         }
         #endregion
     }

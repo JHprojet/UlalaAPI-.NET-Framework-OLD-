@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         /// <param name="Zone">Zone à insérer</param>
         public IHttpActionResult Post(ZoneModel Zone)
         {
-            if (Zone == null) return BadRequest();
+            if (Zone == null || Zone.ContinentEN == null || Zone.ContinentFR == null || Zone.ZoneEN == null || Zone.ZoneFR == null || Zone.NbZones == 0) return BadRequest();
             else
             {
                 repo.Create(Zone.MapTo<ZoneEntity>());
@@ -78,7 +78,7 @@ namespace UlalaAPI.Controllers
         /// <param name="id">Id de la Zone à modifier</param>
         public IHttpActionResult Put(int id, ZoneModel Zone)
         {
-            if (Zone.ContinentFR == null || Zone.ContinentEN == null || Zone.ZoneFR == null || Zone.ZoneEN == null || Zone.NbZones == 0 || Zone.Id == 0 || repo.GetOne(id)?.MapTo<ZoneModel>() == null) return BadRequest();
+            if (Zone.ContinentFR == null || Zone.ContinentEN == null || Zone.ZoneFR == null || Zone.ZoneEN == null || Zone.NbZones == 0 || id == 0 || repo.GetOne(id)?.MapTo<ZoneModel>() == null) return BadRequest();
             else
             {
                 repo.Update(id, Zone.MapTo<ZoneEntity>());
