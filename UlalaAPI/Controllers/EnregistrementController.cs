@@ -64,9 +64,14 @@ namespace UlalaAPI.Controllers
         /// Delete API/Enregistrement/{id}
         /// </summary>
         /// <param name="id">id de l'Enregistrement à supprimer</param>
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
-            repo.Delete(id);
+            if (repo.GetOne(id) == null) return NotFound();
+            else
+            {
+                repo.Delete(id);
+                return Ok();
+            }
         }
         #endregion
 
@@ -78,8 +83,8 @@ namespace UlalaAPI.Controllers
         /// <param name="id">Id de l'Enregistrement à modifier</param>
         public IHttpActionResult Put(int id, EnregistrementModel Enregistrement)
         {
-
-            if (Enregistrement == null || Enregistrement.ImagePath1 == null || Enregistrement.ImagePath2 == null || Enregistrement.ImagePath3 == null || Enregistrement.ImagePath4 == null || Enregistrement.Team.Id == 0 || Enregistrement.Utilisateur.Id == 0 || Enregistrement.BossZone.Id == 0 || id == 0 || repo.GetOne(id)?.ToModel() == null ) return BadRequest();
+            if (repo.GetOne(id) == null) return NotFound();
+            else if (Enregistrement == null || Enregistrement.ImagePath1 == null || Enregistrement.ImagePath2 == null || Enregistrement.ImagePath3 == null || Enregistrement.ImagePath4 == null || Enregistrement.Team.Id == 0 || Enregistrement.Utilisateur.Id == 0 || Enregistrement.BossZone.Id == 0 ) return BadRequest();
             else
             {
                 repo.Update(id, Enregistrement.ToEntity());
@@ -93,9 +98,11 @@ namespace UlalaAPI.Controllers
         /// Get API/Enregistrement/?U={U}&BZ={BZ}&C1={C1}2&C2={C2}&C3={C3}&C4={C4}
         /// </summary>
         /// <returns>Liste de toutes les Enregistrements correspondant à la recherche</returns>
-        public IEnumerable<EnregistrementModel> Get([FromUri]int? U, [FromUri] int? BZ, [FromUri] int? C1, [FromUri] int? C2, [FromUri] int? C3, [FromUri] int? C4)
+        public IHttpActionResult Get([FromUri]int? U, [FromUri] int? BZ, [FromUri] int? C1, [FromUri] int? C2, [FromUri] int? C3, [FromUri] int? C4)
         {
-            return repo.GetAllByInfos(U, BZ, C1, C2, C3, C4).Select(Enregistrement => Enregistrement.ToModel());
+            IEnumerable<EnregistrementModel> Liste = repo.GetAllByInfos(U, BZ, C1, C2, C3, C4).Select(Enregistrement => Enregistrement.ToModel());
+            if (Liste.Count() == 0) return NotFound();
+            else return Json(Liste);
         }
         #endregion
     }

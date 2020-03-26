@@ -64,9 +64,14 @@ namespace UlalaAPI.Controllers
         /// Delete API/Jouet/{id}
         /// </summary>
         /// <param name="id">id du Jouet à supprimer</param>
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
-            repo.Delete(id);
+            if (repo.GetOne(id) == null) return NotFound();
+            else
+            {
+                repo.Delete(id);
+                return Ok();
+            }
         }
         #endregion
 
@@ -78,8 +83,8 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Jouet à modifier</param>
         public IHttpActionResult Put(int Id, JouetModel Jouet)
         {
-
-            if (Jouet == null || Jouet.ImagePath == null || Jouet.NomFR == null || Jouet.NomEN == null || Id == 0 || repo.GetOne(Id)?.MapTo<JouetModel>() != null) return BadRequest();
+            if (repo.GetOne(Id) != null) return NotFound();
+            else if (Jouet == null || Jouet.ImagePath == null || Jouet.NomFR == null || Jouet.NomEN == null) return BadRequest();
             else
             {
                 repo.Update(Id, Jouet.MapTo<JouetEntity>());

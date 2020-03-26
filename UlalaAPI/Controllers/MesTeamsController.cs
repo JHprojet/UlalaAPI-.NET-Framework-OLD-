@@ -75,12 +75,17 @@ namespace UlalaAPI.Controllers
 
         #region DELETE Suppression d'une Team by Id
         /// <summary>
-        /// Delete API/Skill/{id}
+        /// Delete API/Team/{id}
         /// </summary>
-        /// <param name="id">id du Skill à supprimer</param>
-        public void Delete(int id)
+        /// <param name="id">id de la Team à supprimer</param>
+        public IHttpActionResult Delete(int id)
         {
-            repo.Delete(id);
+            if (repo.GetOne(id) == null) return NotFound();
+            else
+            {
+                repo.Delete(id);
+                return Ok();
+            }
         }
         #endregion
 
@@ -92,7 +97,8 @@ namespace UlalaAPI.Controllers
         /// <param name="id">Id de la team à modifier</param>
         public IHttpActionResult Put(int id, MesTeamsModel MaTeam)
         {
-            if (MaTeam == null || MaTeam.Team.Id == 0 || MaTeam.Zone.Id == 0 || MaTeam.Utilisateur.Id == 0 || MaTeam.NomTeam == null || id == 0 || repo.GetOne(id)?.ToModel() == null) return BadRequest();
+            if (repo.GetOne(id) == null) return NotFound();
+            else if (MaTeam == null || MaTeam.Team.Id == 0 || MaTeam.Zone.Id == 0 || MaTeam.Utilisateur.Id == 0 || MaTeam.NomTeam == null) return BadRequest();
             else
             {
                 repo.Update(id, MaTeam.ToEntity());

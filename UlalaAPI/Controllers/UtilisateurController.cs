@@ -92,9 +92,14 @@ namespace UlalaAPI.Controllers
         /// Delete API/Utilisateur/{id}
         /// </summary>
         /// <param name="id">id de l'Utilisateur à supprimer</param>
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
-            repo.Delete(id);
+            if (repo.GetOne(id) == null) return NotFound();
+            else
+            {
+                repo.Delete(id);
+                return Ok();
+            }
         }
         #endregion
 
@@ -106,7 +111,8 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Utilisateur à modifier</param>
         public IHttpActionResult Put(int Id, UtilisateurModel Utilisateur)
         {
-            if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Password == null || Utilisateur.Pseudo == null || (Utilisateur.Role != "User" && Utilisateur.Role != "Admin") || Id == 0 || repo.GetOne(Id)?.MapTo<UtilisateurModel>() == null) return BadRequest();
+            if (repo.GetOne(Id) == null) return NotFound();
+            else if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Password == null || Utilisateur.Pseudo == null || (Utilisateur.Role != "User" && Utilisateur.Role != "Admin")) return BadRequest();
             else
             {
                 repo.Update(Id, Utilisateur.MapTo<UtilisateurEntity>());

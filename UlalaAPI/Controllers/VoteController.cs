@@ -64,9 +64,14 @@ namespace UlalaAPI.Controllers
         /// Delete API/Vote/{id}
         /// </summary>
         /// <param name="id">id du Vote à supprimer</param>
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
-            repo.Delete(id);
+            if (repo.GetOne(id) == null) return NotFound();
+            else
+            {
+                repo.Delete(id);
+                return Ok();
+            }
         }
         #endregion
 
@@ -78,7 +83,8 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Vote à modifier</param>
         public IHttpActionResult Put(int Id, VoteModel Vote)
         {
-            if (Vote == null || Vote.Enregistrement.Id == 0 || Vote.Utilisateur.Id == 0 || Id == 0 || repo.GetOne(Id)?.ToModel() == null) return BadRequest();
+            if (repo.GetOne(Id) == null) return NotFound();
+            else if (Vote == null || Vote.Enregistrement.Id == 0 || Vote.Utilisateur.Id == 0 ) return BadRequest();
             else
             {
                 repo.Update(Id, Vote.ToEntity());

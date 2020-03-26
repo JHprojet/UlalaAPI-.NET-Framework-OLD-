@@ -64,9 +64,14 @@ namespace UlalaAPI.Controllers
         /// Delete API/Classe/{id}
         /// </summary>
         /// <param name="id">id de la Classe à supprimer</param>
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
-            repo.Delete(id);
+            if (repo.GetOne(id) == null) return NotFound();
+            else
+            {
+                repo.Delete(id);
+                return Ok();
+            }
         }
         #endregion
 
@@ -78,7 +83,8 @@ namespace UlalaAPI.Controllers
         /// <param name="id">Id de la Classe à modifier</param>
         public IHttpActionResult Put(int id, ClasseModel Classe)
         {
-            if (Classe == null || Classe.NomEN == null || Classe.NomFR == null || id == 0 || repo.GetOne(id)?.MapTo<ClasseModel>() == null) return BadRequest();
+            if (repo.GetOne(id) == null) return NotFound();
+            if (Classe == null || Classe.NomEN == null || Classe.NomFR == null) return BadRequest();
             else
             {
                 repo.Update(id, Classe.MapTo<ClasseEntity>());

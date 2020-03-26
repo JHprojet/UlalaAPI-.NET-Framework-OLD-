@@ -64,9 +64,14 @@ namespace UlalaAPI.Controllers
         /// Delete API/Boss/{id}
         /// </summary>
         /// <param name="id">id du Boss à supprimer</param>
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
-            repo.Delete(id);
+            if (repo.GetOne(id) == null) return NotFound();
+            else
+            {
+                repo.Delete(id);
+                return Ok();
+            }
         }
         #endregion
 
@@ -78,7 +83,8 @@ namespace UlalaAPI.Controllers
         /// <param name="id">Id du Boss à modifier</param>
         public IHttpActionResult Put(int id, BossModel Boss)
         {
-            if (Boss == null || Boss.NomEN == null || Boss.NomFR == null || id == 0 || repo.GetOne(id)?.MapTo<BossModel>() == null) return BadRequest();
+            if (repo.GetOne(id) == null) return NotFound();
+            else if (Boss == null || Boss.NomEN == null || Boss.NomFR == null) return BadRequest();
             else
             {
                 repo.Update(id, Boss.MapTo<BossEntity>());
