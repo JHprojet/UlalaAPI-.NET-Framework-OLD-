@@ -145,6 +145,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DAL.Entities\DAL.Entities.csproj">
+      <Project>{708f6dac-2687-4483-b341-16585bbf67d3}</Project>
+      <Name>DAL.Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DAL\DAL.csproj">
       <Project>{e7a5f205-55aa-49bf-ba27-b8996a57976e}</Project>
       <Name>DAL</Name>
