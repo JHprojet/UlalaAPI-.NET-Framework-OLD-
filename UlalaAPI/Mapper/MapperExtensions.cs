@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using UlalaAPI.Mapper.Attributes;
 
 namespace UlalaAPI.Mapper
 {
-    //STATUT : OK
     public static class MapperExtensions
     {
         public static T MapTo<T>(this object from, params object[] ctorParameters)

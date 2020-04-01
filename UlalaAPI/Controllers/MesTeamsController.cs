@@ -1,10 +1,6 @@
-﻿using DAL.Entities;
-using DAL.Services;
-using System;
+﻿using DAL.Services;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
@@ -13,7 +9,6 @@ namespace UlalaAPI.Controllers
 {
     public class MesTeamsController : ApiController
     {
-        //STATUT : OK
         MesTeamsRepository repo = new MesTeamsRepository();
 
         #region POST Ajout d'une team

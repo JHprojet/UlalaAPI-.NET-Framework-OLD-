@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace DAL.Entities
+﻿namespace DAL.Entities
 {
-    //STATUT : OK
     public class UtilisateurEntity
     {
         public int Id { get; set; }

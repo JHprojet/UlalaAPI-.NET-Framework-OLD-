@@ -4,12 +4,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace DAL.Services
 {
-    //STATUT : OK MAIS MANQUE CHECK UTILISATEUR
     public class UtilisateurRepository
     {
         #region Ajout Utilisateur
@@ -213,11 +210,25 @@ namespace DAL.Services
         }
         #endregion
 
-        #region Check Utilisateur A FAIRE
-        public bool Check(string a, string b, string c)
+        #region Check Utilisateur
+        public bool Check(string login, string mdp)
         {
-            //Procédure stockée
-            return true;
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    cmd.CommandText = "SP_VerifUtilisateur";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlParameter Pseudo = new SqlParameter("Pseudo", login);
+                    SqlParameter Password = new SqlParameter("Password", mdp);
+                    cmd.Parameters.Add(Pseudo);
+                    cmd.Parameters.Add(Password);
+                    cmd.Parameters.Add("@IsOk", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    c.Open();
+                    cmd.ExecuteNonQuery();
+                    return Convert.ToBoolean(cmd.Parameters["@IsOk"].Value);
+                }
+            }
         }
         #endregion
     }

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace UlalaAPI.Models
+﻿namespace UlalaAPI.Models
 {
-    //STATUT : OK
     public class JouetModel
     {
         public int Id { get; set; }

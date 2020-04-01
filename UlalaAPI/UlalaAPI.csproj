@@ -105,9 +105,12 @@
     <Compile Include="Controllers\ClasseController.cs" />
     <Compile Include="Controllers\EnregistrementController.cs" />
     <Compile Include="Controllers\FavorisController.cs" />
+    <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\JouetController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MesTeamsController.cs" />
     <Compile Include="Controllers\SkillController.cs" />
+    <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Controllers\UtilisateurController.cs" />
     <Compile Include="Controllers\VoteController.cs" />
     <Compile Include="Controllers\ZoneController.cs" />
@@ -123,6 +126,7 @@
     <Compile Include="Models\ClasseModel.cs" />
     <Compile Include="Models\EnregistrementModel.cs" />
     <Compile Include="Models\FavoriModel.cs" />
+    <Compile Include="Models\ImageModel.cs" />
     <Compile Include="Models\JouetModel.cs" />
     <Compile Include="Models\MesTeamsModel.cs" />
     <Compile Include="Models\SkillModel.cs" />
@@ -143,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL.Entities\DAL.Entities.csproj">

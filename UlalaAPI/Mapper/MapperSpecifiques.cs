@@ -1,14 +1,9 @@
 ﻿using DAL.Entities;
 using DAL.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using UlalaAPI.Models;
 
 namespace UlalaAPI.Mapper
 {
-    //STATUT : OK
     public static class MapperSpecifiques
     {
         #region Map BossZone E to M

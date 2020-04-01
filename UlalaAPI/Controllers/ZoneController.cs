@@ -1,10 +1,7 @@
 ﻿using DAL.Entities;
 using DAL.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
@@ -13,7 +10,6 @@ namespace UlalaAPI.Controllers
 {
     public class ZoneController : ApiController
     {
-        //STATUT = OK
         ZoneRepository repo = new ZoneRepository();
 
         #region POST Ajout d'une Zone
