@@ -71,8 +71,9 @@ namespace DAL.Services
                                 Mail = Tab["Mail"].ToString(),
                                 Password = Tab["Password"].ToString(),
                                 Role = Tab["Role"].ToString(),
-                                Actif = (int)Tab["Actif"]
-                            });
+                                Actif = (int)Tab["Actif"],
+                                ActivationToken = Tab["ActivationToken"].ToString()
+                            }); ;
                         }
                         return L;
                     }
@@ -102,7 +103,8 @@ namespace DAL.Services
                                 Mail = Tab["Mail"].ToString(),
                                 Password = Tab["Password"].ToString(),
                                 Role = Tab["Role"].ToString(),
-                                Actif = (int)Tab["Actif"]
+                                Actif = (int)Tab["Actif"],
+                                ActivationToken = Tab["ActivationToken"].ToString()
                             };
                             return S;
                         }
@@ -134,7 +136,8 @@ namespace DAL.Services
                                 Mail = Tab["Mail"].ToString(),
                                 Password = Tab["Password"].ToString(),
                                 Role = Tab["Role"].ToString(),
-                                Actif = (int)Tab["Actif"]
+                                Actif = (int)Tab["Actif"],
+                                ActivationToken = Tab["ActivationToken"].ToString()
                             };
                             return S;
                         }
@@ -168,7 +171,8 @@ namespace DAL.Services
                                     Mail = Tab["Mail"].ToString(),
                                     Password = Tab["Password"].ToString(),
                                     Role = Tab["Role"].ToString(),
-                                    Actif = (int)Tab["Actif"]
+                                    Actif = (int)Tab["Actif"],
+                                    ActivationToken = Tab["ActivationToken"].ToString()
                                 };
                                 return S;
                             }
@@ -227,6 +231,49 @@ namespace DAL.Services
                     c.Open();
                     cmd.ExecuteNonQuery();
                     return Convert.ToBoolean(cmd.Parameters["@IsOk"].Value);
+                }
+            }
+        }
+        #endregion
+
+        #region Update Token
+        public bool UpdateToken(int Id, string Token)
+        {
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    if (Token != null && Id != 0)
+                    {
+                        cmd.CommandText = "SP_UpdateToken";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        SqlParameter ActivationToken = new SqlParameter("ActivationToken", Token);
+                        SqlParameter PId = new SqlParameter("Id", Id);
+                        cmd.Parameters.Add(ActivationToken);
+                        cmd.Parameters.Add(PId);
+                        cmd.Parameters.Add("@IsOk", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                        c.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    return Convert.ToBoolean(cmd.Parameters["@IsOk"].Value);
+                }
+            }
+        }
+        #endregion
+
+        #region Renvoi Token
+        public void RenvoiToken(int Id)
+        {
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    cmd.CommandText = "SP_RenvoiToken";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlParameter PId = new SqlParameter("Id", Id);
+                    cmd.Parameters.Add(PId);
+                    c.Open();
+                    cmd.ExecuteNonQuery();
                 }
             }
         }

@@ -15,8 +15,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.UtilisateurId != 0 && T.EnregistrementId != 0) ;
-                    else
+                    if (T != null && T.UtilisateurId != 0 && T.EnregistrementId != 0)
                     {
                         cmd.CommandText = "SP_AjoutVote";
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -58,6 +57,37 @@ namespace DAL.Services
                 using (SqlCommand cmd = c.CreateCommand())
                 {
                     cmd.CommandText = "SELECT * FROM Votes WHERE Actif = 1";
+                    c.Open();
+                    using (SqlDataReader Tab = cmd.ExecuteReader())
+                    {
+                        List<VoteEntity> L = new List<VoteEntity>();
+                        while (Tab.Read())
+                        {
+                            L.Add(new VoteEntity()
+                            {
+                                Id = (int)Tab["Id"],
+                                EnregistrementId = (int)Tab["EnregistrementId"],
+                                Vote = (int)Tab["Vote"],
+                                UtilisateurId = (int)Tab["UtilisateurId"],
+                                Actif = (int)Tab["Actif"]
+                            });
+                        }
+                        return L;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Récupération Votes by UtilisateurId
+        public List<VoteEntity> GetAllbyUtilisateurId(int UtilisateurId)
+        {
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM Votes WHERE Actif = 1 AND UtilisateurId = @UtilisateurId";
+                    cmd.Parameters.AddWithValue("UtilisateurId", UtilisateurId);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {

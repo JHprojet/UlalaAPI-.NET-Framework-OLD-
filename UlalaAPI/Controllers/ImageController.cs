@@ -7,7 +7,7 @@ namespace UlalaAPI.Controllers
 {
     public class ImageController : ApiController
     {
-        const string FILE_PATH = @"C:\Users\Les Jujus\Desktop\Images\"; //Emplacement constant de stockage des images
+        const string FILE_PATH = @"C:\Users\Les Jujus\Desktop\Projet Ulala\6 - Serveur Images\Images\"; //Emplacement constant de stockage des images
 
         #region Récupération et mise sur le serveur des images
         /// <summary>

@@ -8,5 +8,6 @@
         public string Password { get; set; }
         public string Role { get; set; }
         public int Actif { get; set; }
+        public string ActivationToken { get; set; }
     }
 }

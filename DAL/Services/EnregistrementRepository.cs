@@ -184,7 +184,7 @@ namespace DAL.Services
                     if (C2 != null) sC2 = $" AND (T.ClasseId1 = {C2} OR T.ClasseId2 = {C2} OR T.ClasseId3 = {C2} OR T.ClasseId4 = {C2})";
                     if (C3 != null) sC3 = $" AND (T.ClasseId1 = {C3} OR T.ClasseId2 = {C3} OR T.ClasseId3 = {C3} OR T.ClasseId4 = {C3})";
                     if (C4 != null) sC4 = $" AND (T.ClasseId1 = {C4} OR T.ClasseId2 = {C4} OR T.ClasseId3 = {C4} OR T.ClasseId4 = {C4})";
-                    cmd.CommandText = "SELECT * FROM Enregistrements E JOIN Teams T ON E.TeamId = T.Id WHERE E.Actif = 1" +sU+sBZ+sC1+sC2+sC3+sC4+" ORDER BY Note";
+                    cmd.CommandText = "SELECT * FROM Enregistrements E JOIN Teams T ON E.TeamId = T.Id WHERE E.Actif = 1" +sU+sBZ+sC1+sC2+sC3+sC4+" ORDER BY Note DESC";
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {

@@ -40,6 +40,19 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
+        #region GET Récupération de tous les Votes
+        /// <summary>
+        /// Get API/Vote
+        /// </summary>
+        /// <returns>Liste de tous les Votes</returns>
+        public IHttpActionResult GetbyUtilisateur([FromUri] int UtilisateurId)
+        {
+            IEnumerable<VoteModel> Liste = repo.GetAllbyUtilisateurId(UtilisateurId).Select(Vote => Vote?.ToModel());
+            if (Liste.Count() == 0) return NotFound();
+            else return Json(Liste);
+        }
+        #endregion
+
         #region GET Récupération d'un Vote by Id
         /// <summary>
         /// Get API/Vote/{id}

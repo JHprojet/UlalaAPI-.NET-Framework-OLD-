@@ -23,5 +23,37 @@ namespace UlalaAPI.Controllers
             }
         }
         #endregion
+
+        #region POST Verification Token
+        /// <summary>
+        /// Post API/Login/{Id}/?Token={Token}
+        /// </summary>
+        /// <param name="User">User à tester</param>
+        public IHttpActionResult Post(int Id, [FromUri]string Token)
+        {
+            if (Id == null || Token == null) return BadRequest();
+            else
+            {
+                if (repo.UpdateToken(Id, Token)) return Ok();
+                else return BadRequest();
+            }
+        }
+        #endregion
+
+        #region POST Renvoi Token
+        /// <summary>
+        /// Post API/Login/?IdU={Id}
+        /// </summary>
+        /// <param name="User">User à tester</param>
+        public IHttpActionResult Post([FromUri]int IdU)
+        {
+            if (repo.GetOne(IdU) == null) return BadRequest();
+            else
+            {
+                repo.RenvoiToken(IdU);
+                return Ok();
+            }
+        }
+        #endregion
     }
 }
