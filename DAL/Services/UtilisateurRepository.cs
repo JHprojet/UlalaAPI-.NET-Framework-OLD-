@@ -278,5 +278,54 @@ namespace DAL.Services
             }
         }
         #endregion
+
+        #region Update Password
+        public bool UpdatePassword(int Id, string NewPassword)
+        {
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    if (NewPassword != null && Id != 0)
+                    {
+                        cmd.CommandText = "SP_ChangePassword";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        SqlParameter PNewPassword = new SqlParameter("NewPassword", NewPassword);
+                        SqlParameter PId = new SqlParameter("Id", Id);
+                        cmd.Parameters.Add(PNewPassword);
+                        cmd.Parameters.Add(PId);
+                        cmd.Parameters.Add("@IsOk", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                        c.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    return Convert.ToBoolean(cmd.Parameters["@IsOk"].Value);
+                }
+            }
+        }
+        #endregion
+
+        #region Update Password
+        public bool NouveauPassword(string Mail)
+        {
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    if (Mail != "")
+                    {
+                        cmd.CommandText = "SP_NouveauPassword";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        SqlParameter PMail = new SqlParameter("Mail", Mail);
+                        cmd.Parameters.Add(PMail);
+                        cmd.Parameters.Add("@IsOk", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                        c.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    return Convert.ToBoolean(cmd.Parameters["@IsOk"].Value);
+                }
+            }
+        }
+        #endregion
+        
     }
 }

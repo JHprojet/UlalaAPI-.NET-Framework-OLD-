@@ -55,5 +55,41 @@ namespace UlalaAPI.Controllers
             }
         }
         #endregion
+
+        #region POST Changement Mot de passe
+        /// <summary>
+        /// Post API/Login/?IdUtilisateur={Id}
+        /// </summary>
+        /// <param name="User">User à tester</param>
+        [HttpPost]
+        public IHttpActionResult PostPass([FromUri]int IdUtilisateur, [FromBody]string NewPassword)
+        {
+            if (repo.GetOne(IdUtilisateur) == null || NewPassword == "") return BadRequest();
+            else
+            {
+                repo.UpdatePassword(IdUtilisateur, NewPassword);
+                return Ok();
+            }
+        }
+        #endregion
+
+        #region POST Nouveau Mot de passe
+        /// <summary>
+        /// Post API/Login/?Mail={Mail}
+        /// </summary>
+        /// <param name="User">User à tester</param>
+        [HttpPost]
+        public IHttpActionResult PostPass([FromUri]string Mail)
+        {
+            if (repo.GetOneByMail(Mail) == null || Mail == "") return BadRequest();
+            else
+            {
+                repo.NouveauPassword(Mail);
+                return Ok();
+            }
+        }
+        #endregion
+
+
     }
 }
