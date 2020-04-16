@@ -1,7 +1,10 @@
 ﻿using DAL.Services;
+using JwtToolBox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using UlalaAPI.Helper;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
 
@@ -18,12 +21,16 @@ namespace UlalaAPI.Controllers
         /// <param name="Enregistrement">Enregistrement à insérer</param>
         public IHttpActionResult Post(EnregistrementModel Enregistrement)
         {
-            if (Enregistrement == null || Enregistrement.ImagePath1 == null || Enregistrement.ImagePath2 == null || Enregistrement.ImagePath3 == null || Enregistrement.ImagePath4 == null || Enregistrement.Team.Id == 0 || Enregistrement.Utilisateur.Id == 0 || Enregistrement.BossZone.Id == 0) return BadRequest();
-            else
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Create(Enregistrement.ToEntity());
-                return Ok();
+                if (Enregistrement == null || Enregistrement.ImagePath1 == null || Enregistrement.ImagePath2 == null || Enregistrement.ImagePath3 == null || Enregistrement.ImagePath4 == null || Enregistrement.Team.Id == 0 || Enregistrement.Utilisateur.Id == 0 || Enregistrement.BossZone.Id == 0) return BadRequest();
+                else
+                {
+                    repo.Create(Enregistrement.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -34,9 +41,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de toutes les Enregistrements</returns>
         public IHttpActionResult Get()
         {
-            IEnumerable<EnregistrementModel> Liste = repo.GetAll().Select(Enregistrement => Enregistrement?.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<EnregistrementModel> Liste = repo.GetAll().Select(Enregistrement => Enregistrement?.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -48,9 +59,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Enregistrement avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
-            EnregistrementModel Objet = repo.GetOne(id)?.ToModel();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                EnregistrementModel Objet = repo.GetOne(id)?.ToModel();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -61,12 +76,16 @@ namespace UlalaAPI.Controllers
         /// <param name="id">id de l'Enregistrement à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Delete(id);
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else
+                {
+                    repo.Delete(id);
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -78,13 +97,17 @@ namespace UlalaAPI.Controllers
         /// <param name="id">Id de l'Enregistrement à modifier</param>
         public IHttpActionResult Put(int id, EnregistrementModel Enregistrement)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else if (Enregistrement == null || Enregistrement.ImagePath1 == null || Enregistrement.ImagePath2 == null || Enregistrement.ImagePath3 == null || Enregistrement.ImagePath4 == null || Enregistrement.Team.Id == 0 || Enregistrement.Utilisateur.Id == 0 || Enregistrement.BossZone.Id == 0 ) return BadRequest();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Update(id, Enregistrement.ToEntity());
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else if (Enregistrement == null || Enregistrement.ImagePath1 == null || Enregistrement.ImagePath2 == null || Enregistrement.ImagePath3 == null || Enregistrement.ImagePath4 == null || Enregistrement.Team.Id == 0 || Enregistrement.Utilisateur.Id == 0 || Enregistrement.BossZone.Id == 0) return BadRequest();
+                else
+                {
+                    repo.Update(id, Enregistrement.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -95,9 +118,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de toutes les Enregistrements correspondant à la recherche</returns>
         public IHttpActionResult Get([FromUri]int? U, [FromUri] int? BZ, [FromUri] int? C1, [FromUri] int? C2, [FromUri] int? C3, [FromUri] int? C4)
         {
-            IEnumerable<EnregistrementModel> Liste = repo.GetAllByInfos(U, BZ, C1, C2, C3, C4).Select(Enregistrement => Enregistrement.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<EnregistrementModel> Liste = repo.GetAllByInfos(U, BZ, C1, C2, C3, C4).Select(Enregistrement => Enregistrement.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
     }

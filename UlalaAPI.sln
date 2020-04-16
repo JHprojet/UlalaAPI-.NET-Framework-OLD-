@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.Entities", "DAL.Entities\DAL.Entities.csproj", "{708F6DAC-2687-4483-B341-16585BBF67D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwtToolBox", "JwtToolBox\JwtToolBox.csproj", "{5C46610F-09C2-429C-92E9-56B8277A3A77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{708F6DAC-2687-4483-B341-16585BBF67D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{708F6DAC-2687-4483-B341-16585BBF67D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{708F6DAC-2687-4483-B341-16585BBF67D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C46610F-09C2-429C-92E9-56B8277A3A77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C46610F-09C2-429C-92E9-56B8277A3A77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C46610F-09C2-429C-92E9-56B8277A3A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C46610F-09C2-429C-92E9-56B8277A3A77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,9 @@
 ﻿using DAL.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using UlalaAPI.Helper;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
 
@@ -18,12 +20,16 @@ namespace UlalaAPI.Controllers
         /// <param name="E">Skill à insérer</param>
         public IHttpActionResult Post(SkillModel Skill)
         {
-            if (Skill == null || Skill.NomEN == null || Skill.NomFR == null || Skill.Classe.Id == 0) return BadRequest();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Create(Skill.ToEntity());
-                return Ok();
+                if (Skill == null || Skill.NomEN == null || Skill.NomFR == null || Skill.Classe.Id == 0) return BadRequest();
+                else
+                {
+                    repo.Create(Skill.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -34,9 +40,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de tous les Skill</returns>
         public IHttpActionResult GetAll()
         {
-            IEnumerable<SkillModel> Liste = repo.GetAll().Select(Skill => Skill?.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<SkillModel> Liste = repo.GetAll().Select(Skill => Skill?.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -48,9 +58,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de tous les Skill</returns>
         public IHttpActionResult GetAll([FromUri]int ClasseId)
         {
-            IEnumerable<SkillModel> Liste = repo.GetAll(ClasseId).Select(Skill => Skill?.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<SkillModel> Liste = repo.GetAll(ClasseId).Select(Skill => Skill?.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -62,9 +76,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Skill avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
-            SkillModel Objet = repo.GetOne(id)?.ToModel();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                SkillModel Objet = repo.GetOne(id)?.ToModel();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -75,12 +93,16 @@ namespace UlalaAPI.Controllers
         /// <param name="id">id du Skill à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Delete(id);
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else
+                {
+                    repo.Delete(id);
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -92,13 +114,17 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Skill à modifier</param>
         public IHttpActionResult Put(int Id, SkillModel Skill)
         {
-            if (repo.GetOne(Id) == null) return NotFound();
-            else if (Skill == null || Skill.NomEN == null || Skill.NomFR == null || Skill.Classe.Id == 0) return BadRequest();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Update(Id, Skill.ToEntity());
-                return Ok();
+                if (repo.GetOne(Id) == null) return NotFound();
+                else if (Skill == null || Skill.NomEN == null || Skill.NomFR == null || Skill.Classe.Id == 0) return BadRequest();
+                else
+                {
+                    repo.Update(Id, Skill.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
     }

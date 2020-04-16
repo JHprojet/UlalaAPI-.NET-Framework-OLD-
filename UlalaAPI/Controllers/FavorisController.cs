@@ -1,7 +1,9 @@
 ﻿using DAL.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using UlalaAPI.Helper;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
 
@@ -18,12 +20,16 @@ namespace UlalaAPI.Controllers
         /// <param name="Favori">Favori à insérer</param>
         public IHttpActionResult Post(FavoriModel Favori)
         {
-            if (Favori == null || Favori.Utilisateur.Id == 0 || Favori.Enregistrement.Id == 0) return BadRequest();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Create(Favori.ToEntity());
-                return Ok();
+                if (Favori == null || Favori.Utilisateur.Id == 0 || Favori.Enregistrement.Id == 0) return BadRequest();
+                else
+                {
+                    repo.Create(Favori.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -34,9 +40,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de tous les Favoris</returns>
         public IHttpActionResult Get()
         {
-            IEnumerable<FavoriModel> Liste =  repo.GetAll().Select(Favori => Favori?.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<FavoriModel> Liste = repo.GetAll().Select(Favori => Favori?.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -48,9 +58,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Favori avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
-            FavoriModel Objet = repo.GetOne(id)?.ToModel();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                FavoriModel Objet = repo.GetOne(id)?.ToModel();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -60,11 +74,15 @@ namespace UlalaAPI.Controllers
         /// </summary>
         /// <param name="idUtilisateur">id de l'utilisateur pour lequel on veut la liste des favoris</param>
         /// <returns>Liste de tous les Favoris</returns>
-        public IHttpActionResult GetByUtilisateurId([FromUri]int idUtilisateur)
+        public IHttpActionResult GetByUtilisateurId([FromUri]int UtilisateurId)
         {
-            IEnumerable<FavoriModel> Liste = repo.GetAllByUtilisateurId(idUtilisateur).Select(Favori => Favori?.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<FavoriModel> Liste = repo.GetAllByUtilisateurId(UtilisateurId).Select(Favori => Favori?.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -75,12 +93,16 @@ namespace UlalaAPI.Controllers
         /// <param name="id">id du Favori à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Delete(id);
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else
+                {
+                    repo.Delete(id);
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -92,13 +114,17 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Favori à modifier</param>
         public IHttpActionResult Put(int Id, FavoriModel Favori)
         {
-            if (repo.GetOne(Id) == null) return NotFound();
-            else if (Favori == null || Favori.Utilisateur.Id == 0 || Favori.Enregistrement.Id == 0) return BadRequest();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Update(Id, Favori.ToEntity());
-                return Ok();
+                if (repo.GetOne(Id) == null) return NotFound();
+                else if (Favori == null || Favori.Utilisateur.Id == 0 || Favori.Enregistrement.Id == 0) return BadRequest();
+                else
+                {
+                    repo.Update(Id, Favori.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
     }

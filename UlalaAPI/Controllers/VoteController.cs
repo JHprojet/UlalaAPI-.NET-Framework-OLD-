@@ -1,7 +1,9 @@
 ﻿using DAL.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using UlalaAPI.Helper;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
 
@@ -18,12 +20,16 @@ namespace UlalaAPI.Controllers
         /// <param name="E">Vote à insérer</param>
         public IHttpActionResult Post(VoteModel Vote)
         {
-            if (Vote == null || Vote.Enregistrement.Id == 0 || Vote.Utilisateur.Id == 0) return BadRequest();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Create(Vote.ToEntity());
-                return Ok();
+                if (Vote == null || Vote.Enregistrement.Id == 0 || Vote.Utilisateur.Id == 0) return BadRequest();
+                else
+                {
+                    repo.Create(Vote.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -34,22 +40,31 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de tous les Votes</returns>
         public IHttpActionResult Get()
         {
-            IEnumerable<VoteModel> Liste = repo.GetAll().Select(Vote => Vote?.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<VoteModel> Liste = repo.GetAll().Select(Vote => Vote?.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
-        #region GET Récupération de tous les Votes
+        #region GET Récupération de tous les Votes by Utilisateur
         /// <summary>
         /// Get API/Vote
         /// </summary>
         /// <returns>Liste de tous les Votes</returns>
+        [HttpGet]
         public IHttpActionResult GetbyUtilisateur([FromUri] int UtilisateurId)
         {
-            IEnumerable<VoteModel> Liste = repo.GetAllbyUtilisateurId(UtilisateurId).Select(Vote => Vote?.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<VoteModel> Liste = repo.GetAllbyUtilisateurId(UtilisateurId).Select(Vote => Vote?.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -61,9 +76,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Vote avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
-            VoteModel Objet = repo.GetOne(id)?.ToModel();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                VoteModel Objet = repo.GetOne(id)?.ToModel();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -74,12 +93,16 @@ namespace UlalaAPI.Controllers
         /// <param name="id">id du Vote à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Delete(id);
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else
+                {
+                    repo.Delete(id);
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -91,13 +114,17 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Vote à modifier</param>
         public IHttpActionResult Put(int Id, VoteModel Vote)
         {
-            if (repo.GetOne(Id) == null) return NotFound();
-            else if (Vote == null || Vote.Enregistrement.Id == 0 || Vote.Utilisateur.Id == 0 ) return BadRequest();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Update(Id, Vote.ToEntity());
-                return Ok();
+                if (repo.GetOne(Id) == null) return NotFound();
+                else if (Vote == null || Vote.Enregistrement.Id == 0 || Vote.Utilisateur.Id == 0) return BadRequest();
+                else
+                {
+                    repo.Update(Id, Vote.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
     }

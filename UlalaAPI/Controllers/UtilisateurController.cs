@@ -1,8 +1,10 @@
 ﻿using DAL.Entities;
 using DAL.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using UlalaAPI.Helper;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
 
@@ -19,12 +21,16 @@ namespace UlalaAPI.Controllers
         /// <param name="E">Utilisateur à insérer</param>
         public IHttpActionResult Post(UtilisateurModel Utilisateur)
         {
-            if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Password == null || Utilisateur.Pseudo == null) return BadRequest();
-            else
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Create(Utilisateur.MapTo<UtilisateurEntity>());
-                return Ok();
+                if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Password == null || Utilisateur.Pseudo == null) return BadRequest();
+                else
+                {
+                    repo.Create(Utilisateur.MapTo<UtilisateurEntity>());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -35,9 +41,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de tous les Utilisateur</returns>
         public IHttpActionResult Get()
         {
-            IEnumerable<UtilisateurModel> Liste = repo.GetAll().Select(Utilisateur => Utilisateur?.MapTo<UtilisateurModel>());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<UtilisateurModel> Liste = repo.GetAll().Select(Utilisateur => Utilisateur?.MapTo<UtilisateurModel>());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -49,9 +59,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Utilisateur avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
-            UtilisateurModel Objet = repo.GetOne(id)?.MapTo<UtilisateurModel>();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                UtilisateurModel Objet = repo.GetOne(id)?.MapTo<UtilisateurModel>();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -63,9 +77,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Utilisateur avec le pseudo correspondant</returns>
         public IHttpActionResult GetByPseudo([FromUri] string pseudo)
         {
-            UtilisateurModel Objet = repo.GetOneByPseudo(pseudo)?.MapTo<UtilisateurModel>();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                UtilisateurModel Objet = repo.GetOneByPseudo(pseudo)?.MapTo<UtilisateurModel>();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -77,9 +95,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Utilisateur avec le mail correspondant</returns>
         public IHttpActionResult GetByMail([FromUri] string mail)
         {
-            UtilisateurModel Objet = repo.GetOneByMail(mail)?.MapTo<UtilisateurModel>();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                UtilisateurModel Objet = repo.GetOneByMail(mail)?.MapTo<UtilisateurModel>();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -90,12 +112,16 @@ namespace UlalaAPI.Controllers
         /// <param name="id">id de l'Utilisateur à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Delete(id);
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else
+                {
+                    repo.Delete(id);
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -107,13 +133,17 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Utilisateur à modifier</param>
         public IHttpActionResult Put(int Id, UtilisateurModel Utilisateur)
         {
-            if (repo.GetOne(Id) == null) return NotFound();
-            else if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Password == null || Utilisateur.Pseudo == null || (Utilisateur.Role != "User" && Utilisateur.Role != "Admin")) return BadRequest();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Update(Id, Utilisateur.MapTo<UtilisateurEntity>());
-                return Ok();
+                if (repo.GetOne(Id) == null) return NotFound();
+                else if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Password == null || Utilisateur.Pseudo == null || (Utilisateur.Role != "User" && Utilisateur.Role != "Admin")) return BadRequest();
+                else
+                {
+                    repo.Update(Id, Utilisateur.MapTo<UtilisateurEntity>());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
     }

@@ -1,8 +1,11 @@
 ﻿using DAL.Entities;
 using DAL.Services;
+using JwtToolBox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using UlalaAPI.Helper;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
 
@@ -19,12 +22,16 @@ namespace UlalaAPI.Controllers
         /// <param name="Boss">Boss à insérer</param>
         public IHttpActionResult Post(BossModel Boss)
         {
-            if (Boss == null || Boss.NomEN == null || Boss.NomFR == null) return BadRequest();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Create(Boss.MapTo<BossEntity>());
-                return Ok();
+                if (Boss == null || Boss.NomEN == null || Boss.NomFR == null) return BadRequest();
+                else
+                {
+                    repo.Create(Boss.MapTo<BossEntity>());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -35,9 +42,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de tous les boss</returns>
         public IHttpActionResult Get()
         {
-            IEnumerable<BossModel> Liste = repo.GetAll().Select(Boss => Boss?.MapTo<BossModel>());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<BossModel> Liste = repo.GetAll().Select(Boss => Boss?.MapTo<BossModel>());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -49,9 +60,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Boss avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
-            BossModel Objet = repo.GetOne(id)?.MapTo<BossModel>();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                BossModel Objet = repo.GetOne(id)?.MapTo<BossModel>();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -62,12 +77,16 @@ namespace UlalaAPI.Controllers
         /// <param name="id">id du Boss à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Delete(id);
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else
+                {
+                    repo.Delete(id);
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -79,13 +98,17 @@ namespace UlalaAPI.Controllers
         /// <param name="id">Id du Boss à modifier</param>
         public IHttpActionResult Put(int id, BossModel Boss)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else if (Boss == null || Boss.NomEN == null || Boss.NomFR == null) return BadRequest();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Update(id, Boss.MapTo<BossEntity>());
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else if (Boss == null || Boss.NomEN == null || Boss.NomFR == null) return BadRequest();
+                else
+                {
+                    repo.Update(id, Boss.MapTo<BossEntity>());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
     }

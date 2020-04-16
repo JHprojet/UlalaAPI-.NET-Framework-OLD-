@@ -1,7 +1,10 @@
 ﻿using DAL.Services;
+using JwtToolBox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using UlalaAPI.Helper;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
 
@@ -18,12 +21,16 @@ namespace UlalaAPI.Controllers
         /// <param name="E">Team à insérer</param>
         public IHttpActionResult Post(MesTeamsModel MaTeam)
         {
-            if (MaTeam == null || MaTeam.Team.Id == 0 || MaTeam.Zone.Id == 0 || MaTeam.Utilisateur.Id == 0 || MaTeam.NomTeam == null) return BadRequest();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Create(MaTeam.ToEntity());
-                return Ok();
+                if (MaTeam == null || MaTeam.Team.Id == 0 || MaTeam.Zone.Id == 0 || MaTeam.Utilisateur.Id == 0 || MaTeam.NomTeam == null) return BadRequest();
+                else
+                {
+                    repo.Create(MaTeam.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -34,9 +41,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de toutes les teams des utilisateurs</returns>
         public IHttpActionResult GetAll()
         {
-            IEnumerable<MesTeamsModel> Liste = repo.GetAll().Select(MaTeam => MaTeam?.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<MesTeamsModel> Liste = repo.GetAll().Select(MaTeam => MaTeam?.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -48,9 +59,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de toutes les team de l'utilisateur ciblé</returns>
         public IHttpActionResult GetAll([FromUri]int UtilisateurId)
         {
-            IEnumerable<MesTeamsModel> Liste = repo.GetAll(UtilisateurId).Select(Teams => Teams?.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<MesTeamsModel> Liste = repo.GetAll(UtilisateurId).Select(Teams => Teams?.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -62,9 +77,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Team avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
-            MesTeamsModel Objet = repo.GetOne(id)?.ToModel();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                MesTeamsModel Objet = repo.GetOne(id)?.ToModel();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -75,12 +94,16 @@ namespace UlalaAPI.Controllers
         /// <param name="id">id de la Team à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Delete(id);
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else
+                {
+                    repo.Delete(id);
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -92,13 +115,17 @@ namespace UlalaAPI.Controllers
         /// <param name="id">Id de la team à modifier</param>
         public IHttpActionResult Put(int id, MesTeamsModel MaTeam)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else if (MaTeam == null || MaTeam.Team.Id == 0 || MaTeam.Zone.Id == 0 || MaTeam.Utilisateur.Id == 0 || MaTeam.NomTeam == null) return BadRequest();
-            else
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Update(id, MaTeam.ToEntity());
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else if (MaTeam == null || MaTeam.Team.Id == 0 || MaTeam.Zone.Id == 0 || MaTeam.Utilisateur.Id == 0 || MaTeam.NomTeam == null) return BadRequest();
+                else
+                {
+                    repo.Update(id, MaTeam.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
     }

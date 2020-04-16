@@ -154,10 +154,10 @@ namespace DAL.Services
                     string sC2 = "";
                     string sC3 = "";
                     string sC4 = "";
-                    if (C1 != null) sC1 = $" AND (ClasseId1 = {C1} OR ClasseId2 = {C1} OR ClasseId3 = {C1} OR ClasseId4 = {C1})";
-                    if (C2 != null) sC2 = $" AND (ClasseId1 = {C2} OR ClasseId2 = {C2} OR ClasseId3 = {C2} OR ClasseId4 = {C2})";
-                    if (C3 != null) sC3 = $" AND (ClasseId1 = {C3} OR ClasseId2 = {C3} OR ClasseId3 = {C3} OR ClasseId4 = {C3})";
-                    if (C4 != null) sC4 = $" AND (ClasseId1 = {C4} OR ClasseId2 = {C4} OR ClasseId3 = {C4} OR ClasseId4 = {C4})";
+                    if (C1 != 0) sC1 = $" AND (ClasseId1 = {C1} OR ClasseId2 = {C1} OR ClasseId3 = {C1} OR ClasseId4 = {C1})";
+                    if (C2 != 0) sC2 = $" AND (ClasseId1 = {C2} OR ClasseId2 = {C2} OR ClasseId3 = {C2} OR ClasseId4 = {C2})";
+                    if (C3 != 0) sC3 = $" AND (ClasseId1 = {C3} OR ClasseId2 = {C3} OR ClasseId3 = {C3} OR ClasseId4 = {C3})";
+                    if (C4 != 0) sC4 = $" AND (ClasseId1 = {C4} OR ClasseId2 = {C4} OR ClasseId3 = {C4} OR ClasseId4 = {C4})";
 
                     cmd.CommandText = "SELECT * FROM Teams WHERE Actif = 1" + sC1 + sC2 + sC3 + sC4;
 

@@ -1,8 +1,10 @@
 ﻿using DAL.Entities;
 using DAL.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using UlalaAPI.Helper;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
 
@@ -19,12 +21,16 @@ namespace UlalaAPI.Controllers
         /// <param name="E">Jouet à insérer</param>
         public IHttpActionResult Post(JouetModel Jouet)
         {
-            if (Jouet == null || Jouet.ImagePath == null || Jouet.NomFR == null || Jouet.NomEN == null) return BadRequest();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Create(Jouet.MapTo<JouetEntity>());
-                return Ok();
+                if (Jouet == null || Jouet.ImagePath == null || Jouet.NomFR == null || Jouet.NomEN == null) return BadRequest();
+                else
+                {
+                    repo.Create(Jouet.MapTo<JouetEntity>());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -35,9 +41,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de tous les Jouets</returns>
         public IHttpActionResult Get()
         {
-            IEnumerable<JouetModel> Liste = repo.GetAll().Select(Jouet => Jouet?.MapTo<JouetModel>());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<JouetModel> Liste = repo.GetAll().Select(Jouet => Jouet?.MapTo<JouetModel>());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -49,9 +59,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Jouet avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
-            JouetModel Objet = repo.GetOne(id)?.MapTo<JouetModel>();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                JouetModel Objet = repo.GetOne(id)?.MapTo<JouetModel>();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -62,12 +76,16 @@ namespace UlalaAPI.Controllers
         /// <param name="id">id du Jouet à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Delete(id);
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else
+                {
+                    repo.Delete(id);
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -79,13 +97,17 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Jouet à modifier</param>
         public IHttpActionResult Put(int Id, JouetModel Jouet)
         {
-            if (repo.GetOne(Id) != null) return NotFound();
-            else if (Jouet == null || Jouet.ImagePath == null || Jouet.NomFR == null || Jouet.NomEN == null) return BadRequest();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Update(Id, Jouet.MapTo<JouetEntity>());
-                return Ok();
+                if (repo.GetOne(Id) != null) return NotFound();
+                else if (Jouet == null || Jouet.ImagePath == null || Jouet.NomFR == null || Jouet.NomEN == null) return BadRequest();
+                else
+                {
+                    repo.Update(Id, Jouet.MapTo<JouetEntity>());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
     }

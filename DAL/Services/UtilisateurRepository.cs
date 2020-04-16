@@ -326,6 +326,29 @@ namespace DAL.Services
             }
         }
         #endregion
-        
+
+        #region 
+        public bool RetrievePseudo(string Mail)
+        {
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    if (Mail != "")
+                    {
+                        cmd.CommandText = "SP_RetrievePseudo";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        SqlParameter PMail = new SqlParameter("Mail", Mail);
+                        cmd.Parameters.Add(PMail);
+                        cmd.Parameters.Add("@IsOk", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                        c.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    return Convert.ToBoolean(cmd.Parameters["@IsOk"].Value);
+                }
+            }
+        }
+        #endregion
+
     }
 }

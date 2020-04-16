@@ -1,7 +1,9 @@
 ﻿using DAL.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using UlalaAPI.Helper;
 using UlalaAPI.Mapper;
 using UlalaAPI.Models;
 
@@ -18,12 +20,16 @@ namespace UlalaAPI.Controllers
         /// <param name="BossZone">BossZone à insérer</param>
         public IHttpActionResult Post(BossZoneModel BossZone)
         {
-            if (BossZone == null || BossZone.Boss.Id == 0 || BossZone.Zone.Id == 0) return BadRequest();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Create(BossZone.ToEntity());
-                return Ok();
+                if (BossZone == null || BossZone.Boss.Id == 0 || BossZone.Zone.Id == 0) return BadRequest();
+                else
+                {
+                    repo.Create(BossZone.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -34,9 +40,13 @@ namespace UlalaAPI.Controllers
         /// <returns>Liste de toutes les BossZone</returns>
         public IHttpActionResult Get()
         {
-            IEnumerable<BossZoneModel> Liste = repo.GetAll().Select(BossZone => BossZone?.ToModel());
-            if (Liste.Count() == 0) return NotFound();
-            else return Json(Liste);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<BossZoneModel> Liste = repo.GetAll().Select(BossZone => BossZone?.ToModel());
+                if (Liste.Count() == 0) return NotFound();
+                else return Json(Liste);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -48,9 +58,13 @@ namespace UlalaAPI.Controllers
         /// <returns>BossZone avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
-            BossZoneModel Objet = repo.GetOne(id)?.ToModel();
-            if (Objet == null) return NotFound();
-            else return Json(Objet);
+            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                BossZoneModel Objet = repo.GetOne(id)?.ToModel();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
+            }
+            else return Unauthorized();
         }
         #endregion
 
@@ -61,12 +75,16 @@ namespace UlalaAPI.Controllers
         /// <param name="id">id du Boss à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Delete(id);
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else
+                {
+                    repo.Delete(id);
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
 
@@ -78,13 +96,17 @@ namespace UlalaAPI.Controllers
         /// <param name="id">Id du BossZone à modifier</param>
         public IHttpActionResult Put(int id, BossZoneModel BossZone)
         {
-            if (repo.GetOne(id) == null) return NotFound();
-            else if (BossZone == null || BossZone.Boss.Id == 0 || BossZone.Zone.Id == 0) return BadRequest();
-            else
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                repo.Update(id, BossZone.ToEntity());
-                return Ok();
+                if (repo.GetOne(id) == null) return NotFound();
+                else if (BossZone == null || BossZone.Boss.Id == 0 || BossZone.Zone.Id == 0) return BadRequest();
+                else
+                {
+                    repo.Update(id, BossZone.ToEntity());
+                    return Ok();
+                }
             }
+            else return Unauthorized();
         }
         #endregion
     }
