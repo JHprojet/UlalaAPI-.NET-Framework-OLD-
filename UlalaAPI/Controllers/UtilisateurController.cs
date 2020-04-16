@@ -43,7 +43,7 @@ namespace UlalaAPI.Controllers
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<UtilisateurModel> Liste = repo.GetAll().Select(Utilisateur => Utilisateur?.MapTo<UtilisateurModel>());
+                IEnumerable<UtilisateurModel> Liste = repo.GetAllAdmin().Select(Utilisateur => Utilisateur?.MapTo<UtilisateurModel>());
                 if (Liste.Count() == 0) return NotFound();
                 else return Json(Liste);
             }
@@ -133,10 +133,10 @@ namespace UlalaAPI.Controllers
         /// <param name="Id">Id du Utilisateur à modifier</param>
         public IHttpActionResult Put(int Id, UtilisateurModel Utilisateur)
         {
-            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                if (repo.GetOne(Id) == null) return NotFound();
-                else if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Password == null || Utilisateur.Pseudo == null || (Utilisateur.Role != "User" && Utilisateur.Role != "Admin")) return BadRequest();
+                if (repo.GetOneAdmin(Id) == null) return NotFound();
+                else if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Pseudo == null || (Utilisateur.Role != "User" && Utilisateur.Role != "Admin")) return BadRequest();
                 else
                 {
                     repo.Update(Id, Utilisateur.MapTo<UtilisateurEntity>());

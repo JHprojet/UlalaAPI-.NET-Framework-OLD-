@@ -51,7 +51,5 @@ namespace UlalaAPI.Controllers
             else return Unauthorized();
         }
         #endregion
-
-        
     }
 }

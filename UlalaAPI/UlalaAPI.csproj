@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BossController.cs" />
     <Compile Include="Controllers\BossZoneController.cs" />
     <Compile Include="Controllers\ClasseController.cs" />

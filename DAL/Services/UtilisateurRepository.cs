@@ -82,6 +82,38 @@ namespace DAL.Services
         }
         #endregion
 
+        #region Récupération Utilisateur Admin
+        public List<UtilisateurEntity> GetAllAdmin()
+        {
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM Utilisateurs";
+                    c.Open();
+                    using (SqlDataReader Tab = cmd.ExecuteReader())
+                    {
+                        List<UtilisateurEntity> L = new List<UtilisateurEntity>();
+                        while (Tab.Read())
+                        {
+                            L.Add(new UtilisateurEntity()
+                            {
+                                Id = (int)Tab["Id"],
+                                Pseudo = Tab["Pseudo"].ToString(),
+                                Mail = Tab["Mail"].ToString(),
+                                Password = Tab["Password"].ToString(),
+                                Role = Tab["Role"].ToString(),
+                                Actif = (int)Tab["Actif"],
+                                ActivationToken = Tab["ActivationToken"].ToString()
+                            }); ;
+                        }
+                        return L;
+                    }
+                }
+            }
+        }
+        #endregion
+
         #region Récupération Utilisateur by Id
         public UtilisateurEntity GetOne(int id)
         {
@@ -90,6 +122,39 @@ namespace DAL.Services
                 using (SqlCommand cmd = c.CreateCommand())
                 {
                     cmd.CommandText = "SELECT * FROM Utilisateurs WHERE Id = @Id AND Actif = 1";
+                    cmd.Parameters.AddWithValue("Id", id);
+                    c.Open();
+                    using (SqlDataReader Tab = cmd.ExecuteReader())
+                    {
+                        if (Tab.Read())
+                        {
+                            UtilisateurEntity S = new UtilisateurEntity()
+                            {
+                                Id = (int)Tab["Id"],
+                                Pseudo = Tab["Pseudo"].ToString(),
+                                Mail = Tab["Mail"].ToString(),
+                                Password = Tab["Password"].ToString(),
+                                Role = Tab["Role"].ToString(),
+                                Actif = (int)Tab["Actif"],
+                                ActivationToken = Tab["ActivationToken"].ToString()
+                            };
+                            return S;
+                        }
+                        else return null;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Récupération Utilisateur by Id
+        public UtilisateurEntity GetOneAdmin(int id)
+        {
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM Utilisateurs WHERE Id = @Id";
                     cmd.Parameters.AddWithValue("Id", id);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
@@ -192,20 +257,20 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T.Mail != null && T.Password != null && T.Pseudo != null && (T.Role == "User" || T.Role == "Admin") && Id != 0)
+                    if (T.Mail != null && T.Pseudo != null && (T.Role == "User" || T.Role == "Admin") && Id != 0)
                     {
                         cmd.CommandText = "SP_ModifUtilisateur";
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlParameter Pseudo = new SqlParameter("Pseudo", T.Pseudo);
-                        SqlParameter Password = new SqlParameter("Password", T.Password);
                         SqlParameter Mail = new SqlParameter("Mail", T.Mail);
                         SqlParameter Role = new SqlParameter("Role", T.Role);
+                        SqlParameter Actif = new SqlParameter("Actif", T.Actif);
                         SqlParameter PId = new SqlParameter("Id", Id);
                         cmd.Parameters.Add(Pseudo);
-                        cmd.Parameters.Add(Password);
                         cmd.Parameters.Add(Mail);
                         cmd.Parameters.Add(Role);
                         cmd.Parameters.Add(PId);
+                        cmd.Parameters.Add(Actif);
                         c.Open();
                         cmd.ExecuteNonQuery();
                     }
@@ -304,7 +369,7 @@ namespace DAL.Services
         }
         #endregion
 
-        #region Update Password
+        #region Nouveau Password
         public bool NouveauPassword(string Mail)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
@@ -327,7 +392,7 @@ namespace DAL.Services
         }
         #endregion
 
-        #region 
+        #region Retrieve Pseudo
         public bool RetrievePseudo(string Mail)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
@@ -350,5 +415,29 @@ namespace DAL.Services
         }
         #endregion
 
+        #region Set Role et Actif
+        public void UpdateAdmin(int Id, string Role, int Actif)
+        {
+            using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
+            {
+                using (SqlCommand cmd = c.CreateCommand())
+                {
+                    if ((Role == "User" || Role == "Admin") && Id != 0 && (Actif == 1 || Actif == 0))
+                    {
+                        cmd.CommandText = "SP_AdminUtilisateur";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        SqlParameter PActif = new SqlParameter("Actif", Actif);
+                        SqlParameter PRole = new SqlParameter("Role", Role);
+                        SqlParameter PId = new SqlParameter("Id", Id);
+                        cmd.Parameters.Add(PActif);
+                        cmd.Parameters.Add(PRole);
+                        cmd.Parameters.Add(PId);
+                        c.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }
