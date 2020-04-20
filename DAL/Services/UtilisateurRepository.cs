@@ -69,7 +69,7 @@ namespace DAL.Services
                                 Id = (int)Tab["Id"],
                                 Pseudo = Tab["Pseudo"].ToString(),
                                 Mail = Tab["Mail"].ToString(),
-                                Password = Tab["Password"].ToString(),
+                                Password = "*",
                                 Role = Tab["Role"].ToString(),
                                 Actif = (int)Tab["Actif"],
                                 ActivationToken = Tab["ActivationToken"].ToString()
@@ -101,7 +101,7 @@ namespace DAL.Services
                                 Id = (int)Tab["Id"],
                                 Pseudo = Tab["Pseudo"].ToString(),
                                 Mail = Tab["Mail"].ToString(),
-                                Password = Tab["Password"].ToString(),
+                                Password = "*",
                                 Role = Tab["Role"].ToString(),
                                 Actif = (int)Tab["Actif"],
                                 ActivationToken = Tab["ActivationToken"].ToString()
@@ -133,7 +133,7 @@ namespace DAL.Services
                                 Id = (int)Tab["Id"],
                                 Pseudo = Tab["Pseudo"].ToString(),
                                 Mail = Tab["Mail"].ToString(),
-                                Password = Tab["Password"].ToString(),
+                                Password = "*",
                                 Role = Tab["Role"].ToString(),
                                 Actif = (int)Tab["Actif"],
                                 ActivationToken = Tab["ActivationToken"].ToString()
@@ -166,7 +166,7 @@ namespace DAL.Services
                                 Id = (int)Tab["Id"],
                                 Pseudo = Tab["Pseudo"].ToString(),
                                 Mail = Tab["Mail"].ToString(),
-                                Password = Tab["Password"].ToString(),
+                                Password = "*",
                                 Role = Tab["Role"].ToString(),
                                 Actif = (int)Tab["Actif"],
                                 ActivationToken = Tab["ActivationToken"].ToString()
@@ -199,7 +199,7 @@ namespace DAL.Services
                                 Id = (int)Tab["Id"],
                                 Pseudo = Tab["Pseudo"].ToString(),
                                 Mail = Tab["Mail"].ToString(),
-                                Password = Tab["Password"].ToString(),
+                                Password = "*",
                                 Role = Tab["Role"].ToString(),
                                 Actif = (int)Tab["Actif"],
                                 ActivationToken = Tab["ActivationToken"].ToString()
@@ -234,7 +234,7 @@ namespace DAL.Services
                                     Id = (int)Tab["Id"],
                                     Pseudo = Tab["Pseudo"].ToString(),
                                     Mail = Tab["Mail"].ToString(),
-                                    Password = Tab["Password"].ToString(),
+                                    Password = "*",
                                     Role = Tab["Role"].ToString(),
                                     Actif = (int)Tab["Actif"],
                                     ActivationToken = Tab["ActivationToken"].ToString()

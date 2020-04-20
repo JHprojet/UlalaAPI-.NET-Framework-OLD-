@@ -21,10 +21,18 @@ namespace DAL.Services
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlParameter NomEN = new SqlParameter("NomEN", T.NomEN);
                         SqlParameter NomFR = new SqlParameter("NomFR", T.NomFR);
+                        SqlParameter DescFR = new SqlParameter("DescFR", T.DescFR);
+                        SqlParameter DescEN = new SqlParameter("DescEN", T.DescEN);
+                        SqlParameter Location = new SqlParameter("Location", T.Location);
+                        SqlParameter Cost = new SqlParameter("Cost", T.Cost);
                         SqlParameter ImagePath = new SqlParameter("ImagePath", T.ImagePath);
                         SqlParameter ClasseId = new SqlParameter("ClasseId", T.ClasseId);
                         cmd.Parameters.Add(NomEN);
                         cmd.Parameters.Add(NomFR);
+                        cmd.Parameters.Add(DescFR);
+                        cmd.Parameters.Add(DescEN);
+                        cmd.Parameters.Add(Location);
+                        cmd.Parameters.Add(Cost);
                         cmd.Parameters.Add(ImagePath);
                         cmd.Parameters.Add(ClasseId);
                         c.Open();
@@ -70,6 +78,10 @@ namespace DAL.Services
                                 Id = (int)Tab["Id"],
                                 NomEN = Tab["NomEN"].ToString(),
                                 NomFR = Tab["NomFR"].ToString(),
+                                DescFR = Tab["DescFR"].ToString(),
+                                DescEN = Tab["DescEN"].ToString(),
+                                Location = Tab["Location"].ToString(),
+                                Cost = (int)Tab["Cost"],
                                 ImagePath = Tab["ImagePath"].ToString(),
                                 ClasseId = (int)Tab["ClasseId"],
                                 Actif = (int)Tab["Actif"]
@@ -102,6 +114,10 @@ namespace DAL.Services
                                 Id = (int)Tab["Id"],
                                 NomEN = Tab["NomEN"].ToString(),
                                 NomFR = Tab["NomFR"].ToString(),
+                                DescFR = Tab["DescFR"].ToString(),
+                                DescEN = Tab["DescEN"].ToString(),
+                                Location = Tab["Location"].ToString(),
+                                Cost = (int)Tab["Cost"],
                                 ImagePath = Tab["ImagePath"].ToString(),
                                 ClasseId = (int)Tab["ClasseId"],
                                 Actif = (int)Tab["Actif"]
@@ -133,6 +149,10 @@ namespace DAL.Services
                                 Id = (int)Tab["Id"],
                                 NomEN = Tab["NomEN"].ToString(),
                                 NomFR = Tab["NomFR"].ToString(),
+                                DescFR = Tab["DescFR"].ToString(),
+                                DescEN = Tab["DescEN"].ToString(),
+                                Location = Tab["Location"].ToString(),
+                                Cost = (int)Tab["Cost"],
                                 ImagePath = Tab["ImagePath"].ToString(),
                                 ClasseId = (int)Tab["ClasseId"],
                                 Actif = (int)Tab["Actif"]
@@ -159,11 +179,19 @@ namespace DAL.Services
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlParameter NomEN = new SqlParameter("NomEN", T.NomEN);
                         SqlParameter NomFR = new SqlParameter("NomFR", T.NomFR);
+                        SqlParameter DescFR = new SqlParameter("DescFR", T.DescFR);
+                        SqlParameter DescEN = new SqlParameter("DescEN", T.DescEN);
+                        SqlParameter Location = new SqlParameter("Location", T.Location);
+                        SqlParameter Cost = new SqlParameter("Cost", T.Cost);
                         SqlParameter ImagePath = new SqlParameter("ImagePath", T.ImagePath);
                         SqlParameter ClasseId = new SqlParameter("ClasseId", T.ClasseId);
                         SqlParameter PId = new SqlParameter("Id", Id);
                         cmd.Parameters.Add(NomFR);
                         cmd.Parameters.Add(NomEN);
+                        cmd.Parameters.Add(DescFR);
+                        cmd.Parameters.Add(DescEN);
+                        cmd.Parameters.Add(Location);
+                        cmd.Parameters.Add(Cost);
                         cmd.Parameters.Add(ImagePath);
                         cmd.Parameters.Add(ClasseId);
                         cmd.Parameters.Add(PId);

@@ -125,6 +125,7 @@
     <Compile Include="Controllers\ClasseController.cs" />
     <Compile Include="Controllers\EnregistrementController.cs" />
     <Compile Include="Controllers\FavorisController.cs" />
+    <Compile Include="Controllers\FollowController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\JouetController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Models\ClasseModel.cs" />
     <Compile Include="Models\EnregistrementModel.cs" />
     <Compile Include="Models\FavoriModel.cs" />
+    <Compile Include="Models\FollowModel.cs" />
     <Compile Include="Models\ImageModel.cs" />
     <Compile Include="Models\JouetModel.cs" />
     <Compile Include="Models\MesTeamsModel.cs" />

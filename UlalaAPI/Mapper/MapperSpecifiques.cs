@@ -167,6 +167,10 @@ namespace UlalaAPI.Mapper
                 SM.Id = SE.Id;
                 SM.NomEN = SE.NomEN;
                 SM.NomFR = SE.NomFR;
+                SM.DescEN = SE.DescEN;
+                SM.DescFR = SE.DescFR;
+                SM.Location = SE.Location;
+                SM.Cost = SE.Cost;
                 SM.ImagePath = SE.ImagePath;
                 SM.Classe = repoCl.GetOne(SE.ClasseId).MapTo<ClasseModel>();
                 SM.Actif = SE.Actif;
@@ -185,6 +189,10 @@ namespace UlalaAPI.Mapper
                 SE.Id = SM.Id;
                 SE.NomEN = SM.NomEN;
                 SE.NomFR = SM.NomFR;
+                SE.DescEN = SM.DescEN;
+                SE.DescFR = SM.DescFR;
+                SE.Location = SM.Location;
+                SE.Cost = SM.Cost;
                 SE.ImagePath = SM.ImagePath;
                 SE.ClasseId = SM.Classe.Id;
                 SE.Actif = SM.Actif;
@@ -265,6 +273,36 @@ namespace UlalaAPI.Mapper
                 TE.UtilisateurId = TM.Utilisateur.Id;
                 TE.Actif = TM.Actif;
                 return TE;
+            }
+            else return null;
+        }
+        #endregion
+
+        #region Map Follow E to M
+        public static FollowModel ToModel(this FollowEntity FE)
+        {
+            if (FE != null)
+            {
+                UtilisateurRepository repoU = new UtilisateurRepository();
+                FollowModel FM = new FollowModel();
+                FM.Followed = repoU.GetOne(FE.FollowedId).MapTo<UtilisateurModel>();
+                FM.Follower = repoU.GetOne(FE.FollowerId).MapTo<UtilisateurModel>();
+                return FM;
+            }
+            else return null;
+        }
+        #endregion
+
+        #region Map Follow M to E
+        public static FollowEntity ToEntity(this FollowModel FM)
+        {
+            if (FM != null)
+            {
+                FollowEntity FE = new FollowEntity();
+                FE.FollowedId = FM.Followed.Id;
+                FE.FollowerId = FM.Follower.Id;
+               
+                return FE;
             }
             else return null;
         }

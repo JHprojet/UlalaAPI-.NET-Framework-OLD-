@@ -48,6 +48,7 @@
     <Compile Include="Services\ClasseRepository.cs" />
     <Compile Include="Services\EnregistrementRepository.cs" />
     <Compile Include="Services\FavoriRepository.cs" />
+    <Compile Include="Services\FollowRepository.cs" />
     <Compile Include="Services\JouetRepository.cs" />
     <Compile Include="Services\MesTeamsRepository.cs" />
     <Compile Include="Services\SkillRepository.cs" />

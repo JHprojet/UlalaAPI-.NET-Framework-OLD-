@@ -15,11 +15,11 @@ namespace UlalaAPI.Controllers
     {
         UtilisateurRepository repo = new UtilisateurRepository();
 
-        #region GET Récupération de tous les boss
+        #region GET Récupération de tous les utilisateur
         /// <summary>
         /// Get API/Admin
         /// </summary>
-        /// <returns>Liste de tous les utiilisateur (même inactif)</returns>
+        /// <returns>Liste de tous les utilisateur (même inactif)</returns>
         public IHttpActionResult Get()
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
