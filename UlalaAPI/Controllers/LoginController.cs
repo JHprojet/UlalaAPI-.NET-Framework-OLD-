@@ -64,7 +64,7 @@ namespace UlalaAPI.Controllers
         /// Post API/Login/{Id}/?Token={Token}
         /// </summary>
         /// <param name="User">User à tester</param>
-        public IHttpActionResult Post(int Id, [FromUri]string Token)
+        public IHttpActionResult Post(int Id, [FromBody]string Token)
         {
             if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
