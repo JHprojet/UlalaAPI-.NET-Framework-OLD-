@@ -10,6 +10,7 @@ namespace UlalaAPI.Helper
 {
     public static class ValidateTokenAndRole
     {
+        //Vérification du Rôle dans le token.
         public static string ValidateAndGetRole(HttpRequestMessage R)
         {
             JWTService JWT = new JWTService("FZeDfgPkyXaDFyMwQfSbIoJhF", "localhost:4200", "localhost:4200");

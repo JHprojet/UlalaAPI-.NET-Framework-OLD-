@@ -147,7 +147,7 @@ namespace DAL.Services
         }
         #endregion
 
-        #region Récupération Utilisateur by Id
+        #region Récupération Utilisateur by Id [Admin]
         public UtilisateurEntity GetOneAdmin(int id)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
