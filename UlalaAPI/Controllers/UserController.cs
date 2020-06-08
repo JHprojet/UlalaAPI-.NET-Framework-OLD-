@@ -10,23 +10,23 @@ using UlalaAPI.Models;
 
 namespace UlalaAPI.Controllers
 {
-    public class UtilisateurController : ApiController
+    public class UserController : ApiController
     {
-        UtilisateurRepository repo = new UtilisateurRepository();
+        UserRepository repo = new UserRepository();
 
-        #region POST Ajout d'un Utilisateur
+        #region POST Add d'un User
         /// <summary>
-        /// Post API/Utilisateur
+        /// Post API/User
         /// </summary>
-        /// <param name="E">Utilisateur à insérer</param>
-        public IHttpActionResult Post(UtilisateurModel Utilisateur)
+        /// <param name="E">User à insérer</param>
+        public IHttpActionResult Post(UserModel User)
         {
             if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Password == null || Utilisateur.Pseudo == null) return BadRequest();
+                if (User == null || User.Mail == null || User.Password == null || User.Username == null) return BadRequest();
                 else
                 {
-                    repo.Create(Utilisateur.MapTo<UtilisateurEntity>());
+                    repo.Create(User.MapTo<UserEntity>());
                     return Ok();
                 }
             }
@@ -34,34 +34,34 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region GET Récupération de tous les Utilisateurs
+        #region GET Récupération de tous les Users
         /// <summary>
-        /// Get API/Utilisateur
+        /// Get API/User
         /// </summary>
-        /// <returns>Liste de tous les Utilisateur</returns>
+        /// <returns>List de tous les User</returns>
         public IHttpActionResult Get()
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<UtilisateurModel> Liste = repo.GetAllAdmin().Select(Utilisateur => Utilisateur?.MapTo<UtilisateurModel>());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<UserModel> List = repo.GetAllAdmin().Select(User => User?.MapTo<UserModel>());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
             }
             else return Unauthorized();
         }
         #endregion
 
-        #region GET Récupération d'un Utilisateur by Id
+        #region GET Récupération d'un User by Id
         /// <summary>
-        /// Get API/Utilisateur/{id}
+        /// Get API/User/{id}
         /// </summary>
-        /// <param name="id">id du Utilisateur à récupérer</param>
-        /// <returns>Utilisateur avec l'id correspondant</returns>
+        /// <param name="id">id du User à récupérer</param>
+        /// <returns>User avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                UtilisateurModel Objet = repo.GetOne(id)?.MapTo<UtilisateurModel>();
+                UserModel Objet = repo.GetOne(id)?.MapTo<UserModel>();
                 if (Objet == null) return NotFound();
                 else return Json(Objet);
             }
@@ -69,17 +69,17 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region GET Récupération d'un Utilisateur by pseudo
+        #region GET Récupération d'un User by Username
         /// <summary>
-        /// Get API/Utilisateur/?pseudo={pseudo}
+        /// Get API/User/?Username={Username}
         /// </summary>
-        /// <param name="pseudo">pseudo de l'Utilisateur à récupérer</param>
-        /// <returns>Utilisateur avec le pseudo correspondant</returns>
-        public IHttpActionResult GetByPseudo([FromUri] string pseudo)
+        /// <param name="Username">Username de l'User à récupérer</param>
+        /// <returns>User avec le Username correspondant</returns>
+        public IHttpActionResult GetByUsername([FromUri] string Username)
         {
             if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                UtilisateurModel Objet = repo.GetOneByPseudo(pseudo)?.MapTo<UtilisateurModel>();
+                UserModel Objet = repo.GetOneByUsername(Username)?.MapTo<UserModel>();
                 if (Objet == null) return NotFound();
                 else return Json(Objet);
             }
@@ -87,17 +87,17 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region GET Récupération d'un Utilisateur by mail
+        #region GET Récupération d'un User by mail
         /// <summary>
-        /// Get API/Utilisateur/?mail={mail}
+        /// Get API/User/?mail={mail}
         /// </summary>
-        /// <param name="mail">mail de l'Utilisateur à récupérer</param>
-        /// <returns>Utilisateur avec le mail correspondant</returns>
+        /// <param name="mail">mail de l'User à récupérer</param>
+        /// <returns>User avec le mail correspondant</returns>
         public IHttpActionResult GetByMail([FromUri] string mail)
         {
             if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                UtilisateurModel Objet = repo.GetOneByMail(mail)?.MapTo<UtilisateurModel>();
+                UserModel Objet = repo.GetOneByMail(mail)?.MapTo<UserModel>();
                 if (Objet == null) return NotFound();
                 else return Json(Objet);
             }
@@ -105,11 +105,11 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region DELETE Suppression d'un Utilisateur by Id
+        #region DELETE Suppression d'un User by Id
         /// <summary>
-        /// Delete API/Utilisateur/{id}
+        /// Delete API/User/{id}
         /// </summary>
-        /// <param name="id">id de l'Utilisateur à supprimer</param>
+        /// <param name="id">id de l'User à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
@@ -125,21 +125,21 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region PUT Update d'un Utilisateur by Id
+        #region PUT Update d'un User by Id
         /// <summary>
-        /// Put API/Utilisateur/{id}
+        /// Put API/User/{id}
         /// </summary>
-        /// <param name="Utilisateur">Utilisateur à insérer</param>
-        /// <param name="Id">Id du Utilisateur à modifier</param>
-        public IHttpActionResult Put(int Id, UtilisateurModel Utilisateur)
+        /// <param name="User">User à insérer</param>
+        /// <param name="Id">Id du User à Updateier</param>
+        public IHttpActionResult Put(int Id, UserModel User)
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
                 if (repo.GetOneAdmin(Id) == null) return NotFound();
-                else if (Utilisateur == null || Utilisateur.Mail == null || Utilisateur.Pseudo == null || (Utilisateur.Role != "User" && Utilisateur.Role != "Admin")) return BadRequest();
+                else if (User == null || User.Mail == null || User.Username == null || (User.Role != "User" && User.Role != "Admin")) return BadRequest();
                 else
                 {
-                    repo.Update(Id, Utilisateur.MapTo<UtilisateurEntity>());
+                    repo.Update(Id, User.MapTo<UserEntity>());
                     return Ok();
                 }
             }

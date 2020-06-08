@@ -8,21 +8,21 @@ namespace DAL.Services
 {
     public class ClasseRepository
     {
-        #region Ajout Classe
+        #region Add Classe
         public void Create(ClasseEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.NomFR != null && T.NomEN != null)
+                    if (T != null && T.NameFR != null && T.NameEN != null)
                     {
-                        cmd.CommandText = "SP_AjoutClasse";
+                        cmd.CommandText = "SP_AddClasse";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter NomFR = new SqlParameter("NomFR", T.NomFR);
-                        SqlParameter NomEN = new SqlParameter("NomEN", T.NomEN);
-                        cmd.Parameters.Add(NomFR);
-                        cmd.Parameters.Add(NomEN);
+                        SqlParameter NameFR = new SqlParameter("NameFR", T.NameFR);
+                        SqlParameter NameEN = new SqlParameter("NameEN", T.NameEN);
+                        cmd.Parameters.Add(NameFR);
+                        cmd.Parameters.Add(NameEN);
                         c.Open();
                         cmd.ExecuteNonQuery();
                     }
@@ -54,7 +54,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Classes WHERE Actif = 1";
+                    cmd.CommandText = "SELECT * FROM Classes WHERE Active = 1";
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
@@ -64,9 +64,9 @@ namespace DAL.Services
                             L.Add(new ClasseEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                NomEN = Tab["NomEN"].ToString(),
-                                NomFR = Tab["NomFR"].ToString(),
-                                Actif = (int)Tab["Actif"]
+                                NameEN = Tab["NameEN"].ToString(),
+                                NameFR = Tab["NameFR"].ToString(),
+                                Active = (int)Tab["Active"]
                             });
                         }
                         return L;
@@ -83,7 +83,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Classes WHERE Id = @Id AND Actif = 1";
+                    cmd.CommandText = "SELECT * FROM Classes WHERE Id = @Id AND Active = 1";
                     cmd.Parameters.AddWithValue("Id", id);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
@@ -93,9 +93,9 @@ namespace DAL.Services
                             ClasseEntity S = new ClasseEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                NomEN = Tab["NomEN"].ToString(),
-                                NomFR = Tab["NomFR"].ToString(),
-                                Actif = (int)Tab["Actif"]
+                                NameEN = Tab["NameEN"].ToString(),
+                                NameFR = Tab["NameFR"].ToString(),
+                                Active = (int)Tab["Active"]
                             };
                             return S;
                         }
@@ -113,15 +113,15 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.NomFR != null && T.NomEN != null && Id != 0)
+                    if (T != null && T.NameFR != null && T.NameEN != null && Id != 0)
                     {
-                        cmd.CommandText = "SP_ModifClasse";
+                        cmd.CommandText = "SP_UpdateClasse";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter NomEN = new SqlParameter("NomEN", T.NomEN);
-                        SqlParameter NomFR = new SqlParameter("NomFR", T.NomFR);
+                        SqlParameter NameEN = new SqlParameter("NameEN", T.NameEN);
+                        SqlParameter NameFR = new SqlParameter("NameFR", T.NameFR);
                         SqlParameter PId = new SqlParameter("Id", Id);
-                        cmd.Parameters.Add(NomFR);
-                        cmd.Parameters.Add(NomEN);
+                        cmd.Parameters.Add(NameFR);
+                        cmd.Parameters.Add(NameEN);
                         cmd.Parameters.Add(PId);
                         c.Open();
                         cmd.ExecuteNonQuery();

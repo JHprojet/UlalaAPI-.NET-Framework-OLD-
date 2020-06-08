@@ -16,7 +16,7 @@ namespace UlalaAPI.Controllers
     {
         FollowRepository repo = new FollowRepository();
 
-        #region POST Ajout d'un follow
+        #region POST Add d'un follow
         /// <summary>
         /// Post API/Follow
         /// </summary>
@@ -58,14 +58,14 @@ namespace UlalaAPI.Controllers
         /// <summary>
         /// Get API/Follow
         /// </summary>
-        /// <returns>Liste de tous les Follow</returns>
+        /// <returns>List de tous les Follow</returns>
         public IHttpActionResult Get()
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<FollowModel> Liste = repo.GetAll().Select(Follow => Follow?.ToModel());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<FollowModel> List = repo.GetAll().Select(Follow => Follow?.ToModel());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
             }
             else return Unauthorized();
         }

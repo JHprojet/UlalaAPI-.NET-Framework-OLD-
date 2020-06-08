@@ -6,23 +6,23 @@ using System.Data.SqlClient;
 
 namespace DAL.Services
 {
-    public class FavoriRepository
+    public class FavoriteStrategyRepository
     {
-        #region Ajout Favoris
-        public void Create(FavoriEntity T)
+        #region Add Favoris
+        public void Create(FavoriteStrategyEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.EnregistrementId != 0 && T.UtilisateurId != 0)
+                    if (T != null && T.StrategyId != 0 && T.UserId != 0)
                     {
-                        cmd.CommandText = "SP_AjoutFavori";
+                        cmd.CommandText = "SP_AddFavoriteStrategy";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter EnregistrementId = new SqlParameter("EnregistrementId", T.EnregistrementId);
-                        SqlParameter UtilisateurId = new SqlParameter("UtilisateurId", T.UtilisateurId);
-                        cmd.Parameters.Add(EnregistrementId);
-                        cmd.Parameters.Add(UtilisateurId);
+                        SqlParameter StrategyId = new SqlParameter("StrategyId", T.StrategyId);
+                        SqlParameter UserId = new SqlParameter("UserId", T.UserId);
+                        cmd.Parameters.Add(StrategyId);
+                        cmd.Parameters.Add(UserId);
                         c.Open();
                         cmd.ExecuteNonQuery();
                     }
@@ -38,7 +38,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "DELETE FROM Favoris WHERE Id = @Id";
+                    cmd.CommandText = "DELETE FROM FavoriteStrategies WHERE Id = @Id";
                     cmd.Parameters.AddWithValue("@Id", id);
                     c.Open();
                     cmd.ExecuteScalar();
@@ -48,25 +48,25 @@ namespace DAL.Services
         #endregion
 
         #region Récupération Favoris
-        public List<FavoriEntity> GetAll()
+        public List<FavoriteStrategyEntity> GetAll()
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Favoris WHERE Actif = 1";
+                    cmd.CommandText = "SELECT * FROM FavoriteStrategies WHERE Active = 1";
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
-                        List<FavoriEntity> L = new List<FavoriEntity>();
+                        List<FavoriteStrategyEntity> L = new List<FavoriteStrategyEntity>();
                         while (Tab.Read())
                         {
-                            L.Add(new FavoriEntity()
+                            L.Add(new FavoriteStrategyEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                UtilisateurId = (int)Tab["UtilisateurId"],
-                                EnregistrementId = (int)Tab["EnregistrementId"],
-                                Actif = (int)Tab["Actif"]
+                                UserId = (int)Tab["UserId"],
+                                StrategyId = (int)Tab["StrategyId"],
+                                Active = (int)Tab["Active"]
                             });
                         }
                         return L;
@@ -77,25 +77,25 @@ namespace DAL.Services
         #endregion
 
         #region Récupération Favoris by Id
-        public FavoriEntity GetOne(int id)
+        public FavoriteStrategyEntity GetOne(int id)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Favoris WHERE Id = @Id AND Actif = 1";
+                    cmd.CommandText = "SELECT * FROM FavoriteStrategies WHERE Id = @Id AND Active = 1";
                     cmd.Parameters.AddWithValue("Id", id);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
                         if (Tab.Read())
                         {
-                            FavoriEntity S = new FavoriEntity()
+                            FavoriteStrategyEntity S = new FavoriteStrategyEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                UtilisateurId = (int)Tab["UtilisateurId"],
-                                EnregistrementId = (int)Tab["EnregistrementId"],
-                                Actif = (int)Tab["Actif"]
+                                UserId = (int)Tab["UserId"],
+                                StrategyId = (int)Tab["StrategyId"],
+                                Active = (int)Tab["Active"]
                             };
                             return S;
                         }
@@ -106,27 +106,27 @@ namespace DAL.Services
         }
         #endregion
 
-        #region Récupération Favoris by UtilisateurId
-        public List<FavoriEntity> GetAllByUtilisateurId(int UtilisateurId)
+        #region Récupération Favoris by UserId
+        public List<FavoriteStrategyEntity> GetAllByUserId(int UserId)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Favoris WHERE UtilisateurId = @UtilisateurId AND Actif = 1 ";
-                    cmd.Parameters.AddWithValue("UtilisateurId", UtilisateurId);
+                    cmd.CommandText = "SELECT * FROM FavoriteStrategies WHERE UserId = @UserId AND Active = 1 ";
+                    cmd.Parameters.AddWithValue("UserId", UserId);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
-                        List<FavoriEntity> L = new List<FavoriEntity>();
+                        List<FavoriteStrategyEntity> L = new List<FavoriteStrategyEntity>();
                         while (Tab.Read())
                         {
-                            L.Add(new FavoriEntity()
+                            L.Add(new FavoriteStrategyEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                UtilisateurId = (int)Tab["UtilisateurId"],
-                                EnregistrementId = (int)Tab["EnregistrementId"],
-                                Actif = (int)Tab["Actif"],
+                                UserId = (int)Tab["UserId"],
+                                StrategyId = (int)Tab["StrategyId"],
+                                Active = (int)Tab["Active"],
                             });
                         }
                         return L;
@@ -137,21 +137,21 @@ namespace DAL.Services
         #endregion
 
         #region Update Favoris by Id
-        public void Update(int Id, FavoriEntity T)
+        public void Update(int Id, FavoriteStrategyEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.EnregistrementId != 0 && T.UtilisateurId != 0 && Id != 0)
+                    if (T != null && T.StrategyId != 0 && T.UserId != 0 && Id != 0)
                     {
-                        cmd.CommandText = "SP_ModifFavori";
+                        cmd.CommandText = "SP_UpdateFavoriteStrategy";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter UtilisateurId = new SqlParameter("UtilisateurId", T.UtilisateurId);
-                        SqlParameter EnregistrementId = new SqlParameter("EnregistrementId", T.EnregistrementId);
+                        SqlParameter UserId = new SqlParameter("UserId", T.UserId);
+                        SqlParameter StrategyId = new SqlParameter("StrategyId", T.StrategyId);
                         SqlParameter PId = new SqlParameter("Id", Id);
-                        cmd.Parameters.Add(UtilisateurId);
-                        cmd.Parameters.Add(EnregistrementId);
+                        cmd.Parameters.Add(UserId);
+                        cmd.Parameters.Add(StrategyId);
                         cmd.Parameters.Add(PId);
                         c.Open();
                         cmd.ExecuteNonQuery();

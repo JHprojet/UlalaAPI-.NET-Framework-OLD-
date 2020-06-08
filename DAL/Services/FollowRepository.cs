@@ -12,7 +12,7 @@ namespace DAL.Services
 {
     public class FollowRepository
     {
-        #region Ajout Follow
+        #region Add Follow
         public void Create(FollowEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
@@ -21,7 +21,7 @@ namespace DAL.Services
                 {
                     if (T != null && T.FollowedId != 0 && T.FollowerId != 0)
                     {
-                        cmd.CommandText = "SP_AjoutFollow";
+                        cmd.CommandText = "SP_AddFollow";
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlParameter FollowerId = new SqlParameter("FollowerId", T.FollowerId);
                         SqlParameter FollowedId = new SqlParameter("FollowedId", T.FollowedId);

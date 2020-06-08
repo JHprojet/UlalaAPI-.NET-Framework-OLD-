@@ -6,10 +6,10 @@ using System.Data.SqlClient;
 
 namespace DAL.Services
 {
-    public class BossZoneRepository
+    public class BossesPerZoneRepository
     {
-        #region Ajout BossZone
-        public void Create(BossZoneEntity T)
+        #region Add BossZone
+        public void Create(BossesZoneEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
@@ -17,7 +17,7 @@ namespace DAL.Services
                 {
                     if (T != null && T.BossId != 0 && T.ZoneId != 0)
                     {
-                        cmd.CommandText = "SP_AjoutBossZone";
+                        cmd.CommandText = "SP_AddBossZone";
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlParameter BossId = new SqlParameter("BossId", T.BossId);
                         SqlParameter ZoneId = new SqlParameter("ZoneId", T.ZoneId);
@@ -38,7 +38,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "DELETE FROM BossZones WHERE Id = @Id";
+                    cmd.CommandText = "DELETE FROM BossesPerZones WHERE Id = @Id";
                     cmd.Parameters.AddWithValue("@Id", id);
                     c.Open();
                     cmd.ExecuteScalar();
@@ -48,25 +48,25 @@ namespace DAL.Services
         #endregion
 
         #region Récupération BossZones
-        public List<BossZoneEntity> GetAll()
+        public List<BossesZoneEntity> GetAll()
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM BossZones WHERE Actif = 1";
+                    cmd.CommandText = "SELECT * FROM BossesPerZones WHERE Active = 1";
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
-                        List<BossZoneEntity> L = new List<BossZoneEntity>();
+                        List<BossesZoneEntity> L = new List<BossesZoneEntity>();
                         while (Tab.Read())
                         {
-                            L.Add(new BossZoneEntity()
+                            L.Add(new BossesZoneEntity()
                             {
                                 Id = (int)Tab["Id"],
                                 BossId = (int)Tab["BossId"],
                                 ZoneId = (int)Tab["ZoneId"],
-                                Actif = (int)Tab["Actif"],
+                                Active = (int)Tab["Active"],
                             });
                         }
                         return L;
@@ -77,25 +77,25 @@ namespace DAL.Services
         #endregion
 
         #region Récupération BossZone by Id
-        public BossZoneEntity GetOne(int id)
+        public BossesZoneEntity GetOne(int id)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM BossZones WHERE Id = @Id AND Actif = 1";
+                    cmd.CommandText = "SELECT * FROM BossesPerZones WHERE Id = @Id AND Active = 1";
                     cmd.Parameters.AddWithValue("Id", id);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
                         if (Tab.Read())
                         {
-                            BossZoneEntity S = new BossZoneEntity()
+                            BossesZoneEntity S = new BossesZoneEntity()
                             {
                                 Id = (int)Tab["Id"],
                                 BossId = (int)Tab["BossId"],
                                 ZoneId = (int)Tab["ZoneId"],
-                                Actif = (int)Tab["Id"]
+                                Active = (int)Tab["Id"]
                             };
                             return S;
                         }
@@ -107,7 +107,7 @@ namespace DAL.Services
         #endregion
 
         #region Update BossZone by Id
-        public void Update(int Id, BossZoneEntity T)
+        public void Update(int Id, BossesZoneEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
@@ -115,7 +115,7 @@ namespace DAL.Services
                 {
                     if (T != null && T.BossId != 0 && T.ZoneId != 0 && Id != 0)
                     {
-                        cmd.CommandText = "SP_ModifBossZone";
+                        cmd.CommandText = "SP_UpdateBossZone";
                         cmd.CommandType = CommandType.StoredProcedure;
                         SqlParameter BossId = new SqlParameter("BossId", T.BossId);
                         SqlParameter ZoneId = new SqlParameter("ZoneId", T.ZoneId);

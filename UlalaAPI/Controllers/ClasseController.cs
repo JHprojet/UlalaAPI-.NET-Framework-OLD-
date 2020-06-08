@@ -14,7 +14,7 @@ namespace UlalaAPI.Controllers
     {
         ClasseRepository repo = new ClasseRepository();
 
-        #region POST Ajout d'une Classe
+        #region POST Add d'une Classe
         /// <summary>
         /// Post API/Classe
         /// </summary>
@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                if (Classe == null || Classe.NomEN == null || Classe.NomFR == null) return BadRequest();
+                if (Classe == null || Classe.NameEN == null || Classe.NameFR == null) return BadRequest();
                 else
                 {
                     repo.Create(Classe.MapTo<ClasseEntity>());
@@ -38,14 +38,14 @@ namespace UlalaAPI.Controllers
         /// <summary>
         /// Get API/Classe
         /// </summary>
-        /// <returns>Liste de toutes les Classes</returns>
+        /// <returns>List de toutes les Classes</returns>
         public IHttpActionResult Get()
         {
             if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<ClasseModel> Liste = repo.GetAll().Select(Classe => Classe?.MapTo<ClasseModel>());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<ClasseModel> List = repo.GetAll().Select(Classe => Classe?.MapTo<ClasseModel>());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
             }
             else return Unauthorized();
         }
@@ -94,13 +94,13 @@ namespace UlalaAPI.Controllers
         /// Put API/Classe/{id}
         /// </summary>
         /// <param name="Classe">Classe à insérer</param>
-        /// <param name="id">Id de la Classe à modifier</param>
+        /// <param name="id">Id de la Classe à Updateier</param>
         public IHttpActionResult Put(int id, ClasseModel Classe)
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
                 if (repo.GetOne(id) == null) return NotFound();
-                if (Classe == null || Classe.NomEN == null || Classe.NomFR == null) return BadRequest();
+                if (Classe == null || Classe.NameEN == null || Classe.NameFR == null) return BadRequest();
                 else
                 {
                     repo.Update(id, Classe.MapTo<ClasseEntity>());

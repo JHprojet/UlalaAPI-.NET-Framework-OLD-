@@ -9,20 +9,20 @@ using UlalaAPI.Models;
 
 namespace UlalaAPI.Controllers
 {
-    public class FavorisController : ApiController
+    public class FavoriteStrategyController : ApiController
     {
-        FavoriRepository repo = new FavoriRepository();
+        FavoriteStrategyRepository repo = new FavoriteStrategyRepository();
 
-        #region POST Ajout d'un favori
+        #region POST Add d'un favori
         /// <summary>
         /// Post API/Favoris
         /// </summary>
         /// <param name="Favori">Favori à insérer</param>
-        public IHttpActionResult Post(FavoriModel Favori)
+        public IHttpActionResult Post(FavoriteStrategyModel Favori)
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                if (Favori == null || Favori.Utilisateur.Id == 0 || Favori.Enregistrement.Id == 0) return BadRequest();
+                if (Favori == null || Favori.User.Id == 0 || Favori.Strategy.Id == 0) return BadRequest();
                 else
                 {
                     repo.Create(Favori.ToEntity());
@@ -37,14 +37,14 @@ namespace UlalaAPI.Controllers
         /// <summary>
         /// Get API/Favori
         /// </summary>
-        /// <returns>Liste de tous les Favoris</returns>
+        /// <returns>List de tous les Favoris</returns>
         public IHttpActionResult Get()
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<FavoriModel> Liste = repo.GetAll().Select(Favori => Favori?.ToModel());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<FavoriteStrategyModel> List = repo.GetAll().Select(Favori => Favori?.ToModel());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
             }
             else return Unauthorized();
         }
@@ -60,7 +60,7 @@ namespace UlalaAPI.Controllers
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                FavoriModel Objet = repo.GetOne(id)?.ToModel();
+                FavoriteStrategyModel Objet = repo.GetOne(id)?.ToModel();
                 if (Objet == null) return NotFound();
                 else return Json(Objet);
             }
@@ -68,19 +68,19 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region GET Récupération de tous les Favoris by UtilisateurId
+        #region GET Récupération de tous les Favoris by UserId
         /// <summary>
-        /// Get API/Favoris/?idUtilisateur={idUtilisateur}
+        /// Get API/Favoris/?idUser={idUser}
         /// </summary>
-        /// <param name="idUtilisateur">id de l'utilisateur pour lequel on veut la liste des favoris</param>
-        /// <returns>Liste de tous les Favoris</returns>
-        public IHttpActionResult GetByUtilisateurId([FromUri]int UtilisateurId)
+        /// <param name="idUser">id de l'User pour lequel on veut la List des favoris</param>
+        /// <returns>List de tous les Favoris</returns>
+        public IHttpActionResult GetByUserId([FromUri]int UserId)
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<FavoriModel> Liste = repo.GetAllByUtilisateurId(UtilisateurId).Select(Favori => Favori?.ToModel());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<FavoriteStrategyModel> List = repo.GetAllByUserId(UserId).Select(Favori => Favori?.ToModel());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
             }
             else return Unauthorized();
         }
@@ -111,13 +111,13 @@ namespace UlalaAPI.Controllers
         /// Put API/Favori/{id}
         /// </summary>
         /// <param name="Favori">Favori à insérer</param>
-        /// <param name="Id">Id du Favori à modifier</param>
-        public IHttpActionResult Put(int Id, FavoriModel Favori)
+        /// <param name="Id">Id du Favori à Updateier</param>
+        public IHttpActionResult Put(int Id, FavoriteStrategyModel Favori)
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
                 if (repo.GetOne(Id) == null) return NotFound();
-                else if (Favori == null || Favori.Utilisateur.Id == 0 || Favori.Enregistrement.Id == 0) return BadRequest();
+                else if (Favori == null || Favori.User.Id == 0 || Favori.Strategy.Id == 0) return BadRequest();
                 else
                 {
                     repo.Update(Id, Favori.ToEntity());

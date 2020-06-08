@@ -8,29 +8,29 @@ namespace DAL.Services
 {
     public class SkillRepository
     {
-        #region Ajout Skill
+        #region Add Skill
         public void Create(SkillEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.ImagePath != null && T.NomEN != null && T.NomFR != null)
+                    if (T != null && T.ImagePath != null && T.NameEN != null && T.NameFR != null)
                     {
-                        cmd.CommandText = "SP_AjoutSkill";
+                        cmd.CommandText = "SP_AddSkill";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter NomEN = new SqlParameter("NomEN", T.NomEN);
-                        SqlParameter NomFR = new SqlParameter("NomFR", T.NomFR);
-                        SqlParameter DescFR = new SqlParameter("DescFR", T.DescFR);
-                        SqlParameter DescEN = new SqlParameter("DescEN", T.DescEN);
+                        SqlParameter NameEN = new SqlParameter("NameEN", T.NameEN);
+                        SqlParameter NameFR = new SqlParameter("NameFR", T.NameFR);
+                        SqlParameter DescriptionFR = new SqlParameter("DescriptionFR", T.DescriptionFR);
+                        SqlParameter DescriptionEN = new SqlParameter("DescriptionEN", T.DescriptionEN);
                         SqlParameter Location = new SqlParameter("Location", T.Location);
                         SqlParameter Cost = new SqlParameter("Cost", T.Cost);
                         SqlParameter ImagePath = new SqlParameter("ImagePath", T.ImagePath);
                         SqlParameter ClasseId = new SqlParameter("ClasseId", T.ClasseId);
-                        cmd.Parameters.Add(NomEN);
-                        cmd.Parameters.Add(NomFR);
-                        cmd.Parameters.Add(DescFR);
-                        cmd.Parameters.Add(DescEN);
+                        cmd.Parameters.Add(NameEN);
+                        cmd.Parameters.Add(NameFR);
+                        cmd.Parameters.Add(DescriptionFR);
+                        cmd.Parameters.Add(DescriptionEN);
                         cmd.Parameters.Add(Location);
                         cmd.Parameters.Add(Cost);
                         cmd.Parameters.Add(ImagePath);
@@ -66,7 +66,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM SKills WHERE Actif = 1";
+                    cmd.CommandText = "SELECT * FROM SKills WHERE Active = 1";
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
@@ -76,15 +76,15 @@ namespace DAL.Services
                             L.Add(new SkillEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                NomEN = Tab["NomEN"].ToString(),
-                                NomFR = Tab["NomFR"].ToString(),
-                                DescFR = Tab["DescFR"].ToString(),
-                                DescEN = Tab["DescEN"].ToString(),
+                                NameEN = Tab["NameEN"].ToString(),
+                                NameFR = Tab["NameFR"].ToString(),
+                                DescriptionFR = Tab["DescriptionFR"].ToString(),
+                                DescriptionEN = Tab["DescriptionEN"].ToString(),
                                 Location = Tab["Location"].ToString(),
                                 Cost = (int)Tab["Cost"],
                                 ImagePath = Tab["ImagePath"].ToString(),
                                 ClasseId = (int)Tab["ClasseId"],
-                                Actif = (int)Tab["Actif"]
+                                Active = (int)Tab["Active"]
                             });
                         }
                         return L;
@@ -101,7 +101,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Skills WHERE Actif = 1 AND ClasseId = @ClasseId";
+                    cmd.CommandText = "SELECT * FROM Skills WHERE Active = 1 AND ClasseId = @ClasseId";
                     cmd.Parameters.AddWithValue("ClasseId", ClasseId);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
@@ -112,15 +112,15 @@ namespace DAL.Services
                             L.Add(new SkillEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                NomEN = Tab["NomEN"].ToString(),
-                                NomFR = Tab["NomFR"].ToString(),
-                                DescFR = Tab["DescFR"].ToString(),
-                                DescEN = Tab["DescEN"].ToString(),
+                                NameEN = Tab["NameEN"].ToString(),
+                                NameFR = Tab["NameFR"].ToString(),
+                                DescriptionFR = Tab["DescriptionFR"].ToString(),
+                                DescriptionEN = Tab["DescriptionEN"].ToString(),
                                 Location = Tab["Location"].ToString(),
                                 Cost = (int)Tab["Cost"],
                                 ImagePath = Tab["ImagePath"].ToString(),
                                 ClasseId = (int)Tab["ClasseId"],
-                                Actif = (int)Tab["Actif"]
+                                Active = (int)Tab["Active"]
                             });
                         }
                         return L;
@@ -137,7 +137,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Skills WHERE Id = @Id AND Actif = 1";
+                    cmd.CommandText = "SELECT * FROM Skills WHERE Id = @Id AND Active = 1";
                     cmd.Parameters.AddWithValue("Id", id);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
@@ -147,15 +147,15 @@ namespace DAL.Services
                             SkillEntity S = new SkillEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                NomEN = Tab["NomEN"].ToString(),
-                                NomFR = Tab["NomFR"].ToString(),
-                                DescFR = Tab["DescFR"].ToString(),
-                                DescEN = Tab["DescEN"].ToString(),
+                                NameEN = Tab["NameEN"].ToString(),
+                                NameFR = Tab["NameFR"].ToString(),
+                                DescriptionFR = Tab["DescriptionFR"].ToString(),
+                                DescriptionEN = Tab["DescriptionEN"].ToString(),
                                 Location = Tab["Location"].ToString(),
                                 Cost = (int)Tab["Cost"],
                                 ImagePath = Tab["ImagePath"].ToString(),
                                 ClasseId = (int)Tab["ClasseId"],
-                                Actif = (int)Tab["Actif"]
+                                Active = (int)Tab["Active"]
                             };
                             return S;
                         }
@@ -173,23 +173,23 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.ImagePath != null && T.NomEN != null && T.NomFR != null && Id != 0)
+                    if (T != null && T.ImagePath != null && T.NameEN != null && T.NameFR != null && Id != 0)
                     {
-                        cmd.CommandText = "SP_ModifSkill";
+                        cmd.CommandText = "SP_UpdateSkill";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter NomEN = new SqlParameter("NomEN", T.NomEN);
-                        SqlParameter NomFR = new SqlParameter("NomFR", T.NomFR);
-                        SqlParameter DescFR = new SqlParameter("DescFR", T.DescFR);
-                        SqlParameter DescEN = new SqlParameter("DescEN", T.DescEN);
+                        SqlParameter NameEN = new SqlParameter("NameEN", T.NameEN);
+                        SqlParameter NameFR = new SqlParameter("NameFR", T.NameFR);
+                        SqlParameter DescriptionFR = new SqlParameter("DescriptionFR", T.DescriptionFR);
+                        SqlParameter DescriptionEN = new SqlParameter("DescriptionEN", T.DescriptionEN);
                         SqlParameter Location = new SqlParameter("Location", T.Location);
                         SqlParameter Cost = new SqlParameter("Cost", T.Cost);
                         SqlParameter ImagePath = new SqlParameter("ImagePath", T.ImagePath);
                         SqlParameter ClasseId = new SqlParameter("ClasseId", T.ClasseId);
                         SqlParameter PId = new SqlParameter("Id", Id);
-                        cmd.Parameters.Add(NomFR);
-                        cmd.Parameters.Add(NomEN);
-                        cmd.Parameters.Add(DescFR);
-                        cmd.Parameters.Add(DescEN);
+                        cmd.Parameters.Add(NameFR);
+                        cmd.Parameters.Add(NameEN);
+                        cmd.Parameters.Add(DescriptionFR);
+                        cmd.Parameters.Add(DescriptionEN);
                         cmd.Parameters.Add(Location);
                         cmd.Parameters.Add(Cost);
                         cmd.Parameters.Add(ImagePath);

@@ -1,4 +1,5 @@
 ﻿using DAL.Services;
+using JwtToolBox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,16 @@ namespace UlalaAPI.Controllers
     {
         TeamRepository repo = new TeamRepository();
 
-        #region POST Ajout d'une team
+        #region POST Add d'une CharactersConfiguration
         /// <summary>
         /// Post API/Team
         /// </summary>
-        /// <param name="Team">Enregistrement à insérer</param>
+        /// <param name="E">CharactersConfiguration à insérer</param>
         public IHttpActionResult Post(TeamModel Team)
         {
-            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                if (Team == null || Team.Classe1.Id == 0 || Team.Classe2.Id == 0 || Team.Classe3.Id == 0 || Team.Classe4.Id == 0) return BadRequest();
+                if (Team == null || Team.CharactersConfiguration.Id == 0 || Team.Zone.Id == 0 || Team.User.Id == 0 || Team.TeamName == null) return BadRequest();
                 else
                 {
                     repo.Create(Team.ToEntity());
@@ -33,32 +34,50 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region GET Récupération de tous les Teams
+        #region GET Récupération de tous les CharactersConfigurations des Users
         /// <summary>
         /// Get API/Team
         /// </summary>
-        /// <returns>Liste de toutes les Teams</returns>
-        public IHttpActionResult Get()
+        /// <returns>List de toutes les CharactersConfigurations des Users</returns>
+        public IHttpActionResult GetAll()
         {
-            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<TeamModel> Liste = repo.GetAll().Select(Team => Team?.ToModel());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<TeamModel> List = repo.GetAll().Select(Team => Team?.ToModel());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
             }
             else return Unauthorized();
         }
         #endregion
 
-        #region GET Récupération d'une Team by Id
+        #region GET Récupération des CharactersConfigurations d'un User by UserId
+        /// <summary>
+        /// Get API/Team/?UserId={UserId}
+        /// </summary>
+        /// <param name="UserId">id de l'User pour lequel on veut récupérer ses CharactersConfigurations</param>
+        /// <returns>List de toutes les CharactersConfiguration de l'User ciblé</returns>
+        public IHttpActionResult GetAll([FromUri]int UserId)
+        {
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                IEnumerable<TeamModel> List = repo.GetAll(UserId).Select(Team => Team?.ToModel());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
+            }
+            else return Unauthorized();
+        }
+        #endregion
+
+        #region GET Récupération d'une CharactersConfiguration by Id
         /// <summary>
         /// Get API/Team/{id}
         /// </summary>
-        /// <param name="id">id de la team à récupérer</param>
-        /// <returns>Team avec l'id correspondant</returns>
+        /// <param name="id">id de la CharactersConfiguration à récupérer</param>
+        /// <returns>CharactersConfiguration avec l'id correspondant</returns>
         public IHttpActionResult Get(int id)
         {
-            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
                 TeamModel Objet = repo.GetOne(id)?.ToModel();
                 if (Objet == null) return NotFound();
@@ -68,14 +87,14 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region DELETE Suppression d'une Team by Id
+        #region DELETE Suppression d'une CharactersConfiguration by Id
         /// <summary>
-        /// Delete API/Team/{id}
+        /// Delete API/CharactersConfiguration/{id}
         /// </summary>
-        /// <param name="id">id de la team à supprimer</param>
+        /// <param name="id">id de la CharactersConfiguration à supprimer</param>
         public IHttpActionResult Delete(int id)
         {
-            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
                 if (repo.GetOne(id) == null) return NotFound();
                 else
@@ -88,40 +107,23 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region PUT Update d'une team by Id
+        #region PUT Update d'une CharactersConfiguration by Id
         /// <summary>
         /// Put API/Team/{id}
         /// </summary>
-        /// <param name="Team">Team à insérer</param>
-        /// <param name="id">Id de la team à modifier</param>
+        /// <param name="Team">CharactersConfiguration à insérer</param>
+        /// <param name="id">Id de la CharactersConfiguration à Updateier</param>
         public IHttpActionResult Put(int id, TeamModel Team)
         {
-            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
                 if (repo.GetOne(id) == null) return NotFound();
-                else if (Team == null || Team.Classe1.Id == 0 || Team.Classe2.Id == 0 || Team.Classe3.Id == 0 || Team.Classe4.Id == 0) return BadRequest();
+                else if (Team == null || Team.CharactersConfiguration.Id == 0 || Team.Zone.Id == 0 || Team.User.Id == 0 || Team.TeamName == null) return BadRequest();
                 else
                 {
                     repo.Update(id, Team.ToEntity());
                     return Ok();
                 }
-            }
-            else return Unauthorized();
-        }
-        #endregion
-
-        #region GET Récupération de tous les Enregistrements by Classes
-        /// <summary>
-        /// Get API/Team/?C1={C1}2&C2={C2}&C3={C3}&C4={C4}
-        /// </summary>
-        /// <returns>Liste de toutes les Teams correspondant à la recherche</returns>
-        public IHttpActionResult Get([FromUri] int C1, [FromUri] int C2, [FromUri] int C3, [FromUri] int C4)
-        {
-            if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
-            {
-                TeamModel Objet = repo.GetTeamByClasses(C1, C2, C3, C4).ToModel();
-                if (Objet == null) return NotFound();
-                else return Json(Objet);
             }
             else return Unauthorized();
         }

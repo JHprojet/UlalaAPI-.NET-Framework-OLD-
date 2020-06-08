@@ -1,11 +1,10 @@
 ﻿namespace UlalaAPI.Models
 {
-    public class VoteModel
+    public class FavoriteStrategyModel
     {
         public int Id { get; set; }
-        public StrategyModel Strategy { get; set; }
         public UserModel User { get; set; }
-        public int Vote { get; set; }
+        public StrategyModel Strategy { get; set; }
         public int Active { get; set; }
     }
 }

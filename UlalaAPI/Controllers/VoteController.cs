@@ -13,7 +13,7 @@ namespace UlalaAPI.Controllers
     {
         VoteRepository repo = new VoteRepository();
 
-        #region POST Ajout d'un Vote
+        #region POST Add d'un Vote
         /// <summary>
         /// Post API/Vote
         /// </summary>
@@ -22,7 +22,7 @@ namespace UlalaAPI.Controllers
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                if (Vote == null || Vote.Enregistrement.Id == 0 || Vote.Utilisateur.Id == 0) return BadRequest();
+                if (Vote == null || Vote.Strategy.Id == 0 || Vote.User.Id == 0) return BadRequest();
                 else
                 {
                     repo.Create(Vote.ToEntity());
@@ -37,32 +37,32 @@ namespace UlalaAPI.Controllers
         /// <summary>
         /// Get API/Vote
         /// </summary>
-        /// <returns>Liste de tous les Votes</returns>
+        /// <returns>List de tous les Votes</returns>
         public IHttpActionResult Get()
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<VoteModel> Liste = repo.GetAll().Select(Vote => Vote?.ToModel());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<VoteModel> List = repo.GetAll().Select(Vote => Vote?.ToModel());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
             }
             else return Unauthorized();
         }
         #endregion
 
-        #region GET Récupération de tous les Votes by Utilisateur
+        #region GET Récupération de tous les Votes by User
         /// <summary>
         /// Get API/Vote
         /// </summary>
-        /// <returns>Liste de tous les Votes</returns>
+        /// <returns>List de tous les Votes</returns>
         [HttpGet]
-        public IHttpActionResult GetbyUtilisateur([FromUri] int UtilisateurId)
+        public IHttpActionResult GetbyUser([FromUri] int UserId)
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<VoteModel> Liste = repo.GetAllbyUtilisateurId(UtilisateurId).Select(Vote => Vote?.ToModel());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<VoteModel> List = repo.GetAllbyUserId(UserId).Select(Vote => Vote?.ToModel());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
             }
             else return Unauthorized();
         }
@@ -111,13 +111,13 @@ namespace UlalaAPI.Controllers
         /// Put API/Vote/{id}
         /// </summary>
         /// <param name="Vote">Vote à insérer</param>
-        /// <param name="Id">Id du Vote à modifier</param>
+        /// <param name="Id">Id du Vote à Updateier</param>
         public IHttpActionResult Put(int Id, VoteModel Vote)
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
                 if (repo.GetOne(Id) == null) return NotFound();
-                else if (Vote == null || Vote.Enregistrement.Id == 0 || Vote.Utilisateur.Id == 0) return BadRequest();
+                else if (Vote == null || Vote.Strategy.Id == 0 || Vote.User.Id == 0) return BadRequest();
                 else
                 {
                     repo.Update(Id, Vote.ToEntity());

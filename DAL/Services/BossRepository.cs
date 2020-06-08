@@ -8,21 +8,21 @@ namespace DAL.Services
 {
     public class BossRepository
     {
-        #region Ajout Boss
+        #region Add Boss
         public void Create(BossEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.NomFR != null && T.NomEN != null)
+                    if (T != null && T.NameFR != null && T.NameEN != null)
                     {
-                        cmd.CommandText = "SP_AjoutBoss";
+                        cmd.CommandText = "SP_AddBoss";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter NomEN = new SqlParameter("NomEN", T.NomEN);
-                        SqlParameter NomFR = new SqlParameter("NomFR", T.NomFR);
-                        cmd.Parameters.Add(NomFR);
-                        cmd.Parameters.Add(NomEN);
+                        SqlParameter NameEN = new SqlParameter("NameEN", T.NameEN);
+                        SqlParameter NameFR = new SqlParameter("NameFR", T.NameFR);
+                        cmd.Parameters.Add(NameFR);
+                        cmd.Parameters.Add(NameEN);
                         c.Open();
                         cmd.ExecuteNonQuery();
                     }
@@ -38,7 +38,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "DELETE FROM Boss WHERE Id = @Id";
+                    cmd.CommandText = "DELETE FROM Bosses WHERE Id = @Id";
                     cmd.Parameters.AddWithValue("@Id", id);
                     c.Open();
                     cmd.ExecuteScalar();
@@ -54,7 +54,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Boss WHERE Actif = 1";
+                    cmd.CommandText = "SELECT * FROM Bosses WHERE Active = 1";
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
@@ -64,9 +64,9 @@ namespace DAL.Services
                             L.Add(new BossEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                NomEN = Tab["NomEN"].ToString(),
-                                NomFR = Tab["NomFR"].ToString(),
-                                Actif = (int)Tab["Actif"]
+                                NameEN = Tab["NameEN"].ToString(),
+                                NameFR = Tab["NameFR"].ToString(),
+                                Active = (int)Tab["Active"]
                             });
                         }
                         return L;
@@ -83,7 +83,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Boss WHERE Id = @Id AND Actif = 1";
+                    cmd.CommandText = "SELECT * FROM Bosses WHERE Id = @Id AND Active = 1";
                     cmd.Parameters.AddWithValue("Id", id);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
@@ -93,9 +93,9 @@ namespace DAL.Services
                             BossEntity S = new BossEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                NomEN = Tab["NomEN"].ToString(),
-                                NomFR = Tab["NomFR"].ToString(),
-                                Actif = (int)Tab["Actif"]
+                                NameEN = Tab["NameEN"].ToString(),
+                                NameFR = Tab["NameFR"].ToString(),
+                                Active = (int)Tab["Active"]
                             };
                             return S;
                         }
@@ -113,15 +113,15 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.NomFR != null && T.NomEN != null && Id != 0)
+                    if (T != null && T.NameFR != null && T.NameEN != null && Id != 0)
                     {
-                        cmd.CommandText = "SP_ModifBoss";
+                        cmd.CommandText = "SP_UpdateBoss";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter NomEN = new SqlParameter("NomEN", T.NomEN);
-                        SqlParameter NomFR = new SqlParameter("NomFR", T.NomFR);
+                        SqlParameter NameEN = new SqlParameter("NameEN", T.NameEN);
+                        SqlParameter NameFR = new SqlParameter("NameFR", T.NameFR);
                         SqlParameter PId = new SqlParameter("Id", Id);
-                        cmd.Parameters.Add(NomFR);
-                        cmd.Parameters.Add(NomEN);
+                        cmd.Parameters.Add(NameFR);
+                        cmd.Parameters.Add(NameEN);
                         cmd.Parameters.Add(PId);
                         c.Open();
                         cmd.ExecuteNonQuery();

@@ -7,7 +7,7 @@
         public string ContinentEN { get; set; }
         public string ZoneFR { get; set; }
         public string ZoneEN { get; set; }
-        public int NbZones { get; set; }
-        public int Actif { get; set; }
+        public int ZoneQty { get; set; }
+        public int Active { get; set; }
     }
 }

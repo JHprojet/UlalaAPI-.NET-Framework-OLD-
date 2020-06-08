@@ -3,10 +3,10 @@
     public class TeamEntity
     {
         public int Id { get; set; }
-        public int ClasseId1 { get; set; }
-        public int ClasseId2 { get; set; }
-        public int ClasseId3 { get; set; }
-        public int ClasseId4 { get; set; }
-        public int Actif { get; set; }
+        public int UserId { get; set; }
+        public int CharactersConfigurationId { get; set; }
+        public int ZoneId { get; set; }
+        public string TeamName { get; set; }
+        public int Active { get; set; }
     }
 }

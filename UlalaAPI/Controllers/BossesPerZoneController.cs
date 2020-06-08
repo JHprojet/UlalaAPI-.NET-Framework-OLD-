@@ -9,16 +9,16 @@ using UlalaAPI.Models;
 
 namespace UlalaAPI.Controllers
 {
-    public class BossZoneController : ApiController
+    public class BossesPerZoneController : ApiController
     {
-        BossZoneRepository repo = new BossZoneRepository();
+        BossesPerZoneRepository repo = new BossesPerZoneRepository();
 
-        #region POST Ajout d'un BossZone
+        #region POST Add d'un BossZone
         /// <summary>
         /// Post API/BossZone
         /// </summary>
         /// <param name="BossZone">BossZone à insérer</param>
-        public IHttpActionResult Post(BossZoneModel BossZone)
+        public IHttpActionResult Post(BossesZoneModel BossZone)
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
@@ -37,14 +37,14 @@ namespace UlalaAPI.Controllers
         /// <summary>
         /// Get API/BossZone
         /// </summary>
-        /// <returns>Liste de toutes les BossZone</returns>
+        /// <returns>List de toutes les BossZone</returns>
         public IHttpActionResult Get()
         {
             if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<BossZoneModel> Liste = repo.GetAll().Select(BossZone => BossZone?.ToModel());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<BossesZoneModel> List = repo.GetAll().Select(BossZone => BossZone?.ToModel());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
             }
             else return Unauthorized();
         }
@@ -60,7 +60,7 @@ namespace UlalaAPI.Controllers
         {
             if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                BossZoneModel Objet = repo.GetOne(id)?.ToModel();
+                BossesZoneModel Objet = repo.GetOne(id)?.ToModel();
                 if (Objet == null) return NotFound();
                 else return Json(Objet);
             }
@@ -93,8 +93,8 @@ namespace UlalaAPI.Controllers
         /// Put API/BossZone/{id}
         /// </summary>
         /// <param name="BossZone">BossZone à insérer</param>
-        /// <param name="id">Id du BossZone à modifier</param>
-        public IHttpActionResult Put(int id, BossZoneModel BossZone)
+        /// <param name="id">Id du BossZone à Updateier</param>
+        public IHttpActionResult Put(int id, BossesZoneModel BossZone)
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {

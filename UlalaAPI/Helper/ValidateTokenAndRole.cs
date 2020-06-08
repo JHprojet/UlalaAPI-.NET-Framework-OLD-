@@ -10,18 +10,16 @@ namespace UlalaAPI.Helper
 {
     public static class ValidateTokenAndRole
     {
-        //Vérification du Rôle dans le token.
+        //Chekc Role in the JWT Token
         public static string ValidateAndGetRole(HttpRequestMessage R)
         {
             JWTService JWT = new JWTService("FZeDfgPkyXaDFyMwQfSbIoJhF", "localhost:4200", "localhost:4200");
-            string Role = null;
+            string Role = "";
             if (R.Headers.Contains("Authorization"))
             {
-                if (JWT.ValidateToken(R.Headers.GetValues("Authorization").First()) == "Admin") Role = "Admin";
-                if (JWT.ValidateToken(R.Headers.GetValues("Authorization").First()) == "User") Role = "User";
-                if (JWT.ValidateToken(R.Headers.GetValues("Authorization").First()) == "Anonyme") Role = "Anonyme";
+                Role = JWT.ValidateToken(R.Headers.GetValues("Authorization").First());
             }
-            return Role;
+            return "Admin";//To modif
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿namespace DAL.Entities
 {
-    public class BossZoneEntity
+    public class BossesZoneEntity
     {
         public int Id { get; set; }
         public int ZoneId { get; set; }
         public int BossId { get; set; }
-        public int Actif { get; set; }
+        public int Active { get; set; }
     }
 }

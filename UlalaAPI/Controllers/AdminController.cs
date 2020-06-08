@@ -13,20 +13,38 @@ namespace UlalaAPI.Controllers
 {
     public class AdminController : ApiController
     {
-        UtilisateurRepository repo = new UtilisateurRepository();
+        UserRepository repo = new UserRepository();
 
-        #region GET Récupération de tous les utilisateur
+        #region GET Récupération de tous les User
         /// <summary>
         /// Get API/Admin
         /// </summary>
-        /// <returns>Liste de tous les utilisateur (même inactif)</returns>
+        /// <returns>List de tous les User (même inActive)</returns>
         public IHttpActionResult Get()
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<UtilisateurModel> Liste = repo.GetAllAdmin().Select(User => User?.MapTo<UtilisateurModel>());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<UserModel> List = repo.GetAllAdmin().Select(User => User?.MapTo<UserModel>());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
+            }
+            else return Unauthorized();
+        }
+        #endregion
+
+        #region GET Récupération d'un User by Id
+        /// <summary>
+        /// Get API/Admin/{id}
+        /// </summary>
+        /// <param name="id">id du User à récupérer</param>
+        /// <returns>User avec l'id correspondant</returns>
+        public IHttpActionResult Get(int id)
+        {
+            if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
+            {
+                UserModel Objet = repo.GetOneAdmin(id)?.MapTo<UserModel>();
+                if (Objet == null) return NotFound();
+                else return Json(Objet);
             }
             else return Unauthorized();
         }

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Core.3.3.107.8\lib\net45\AWSSDK.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -43,19 +46,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\BossEntity.cs" />
-    <Compile Include="Entities\BossZoneEntity.cs" />
+    <Compile Include="Entities\BossesZoneEntity.cs" />
     <Compile Include="Entities\ClasseEntity.cs" />
-    <Compile Include="Entities\EnregistrementEntity.cs" />
-    <Compile Include="Entities\FavoriEntity.cs" />
+    <Compile Include="Entities\StrategyEntity.cs" />
+    <Compile Include="Entities\FavoriteStrategyEntity.cs" />
     <Compile Include="Entities\FollowEntity.cs" />
-    <Compile Include="Entities\JouetEntity.cs" />
-    <Compile Include="Entities\MesTeamsEntity.cs" />
-    <Compile Include="Entities\SkillEntity.cs" />
+    <Compile Include="Entities\ToyEntity.cs" />
     <Compile Include="Entities\TeamEntity.cs" />
-    <Compile Include="Entities\UtilisateurEntity.cs" />
+    <Compile Include="Entities\SkillEntity.cs" />
+    <Compile Include="Entities\CharactersConfigurationEntity.cs" />
+    <Compile Include="Entities\UserEntity.cs" />
     <Compile Include="Entities\VoteEntity.cs" />
     <Compile Include="Entities\ZoneEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

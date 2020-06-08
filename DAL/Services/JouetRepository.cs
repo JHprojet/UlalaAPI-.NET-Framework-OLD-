@@ -6,24 +6,24 @@ using System.Data.SqlClient;
 
 namespace DAL.Services
 {
-    public class JouetRepository
+    public class ToyRepository
     {
-        #region Ajout Jouet
-        public void Create(JouetEntity T)
+        #region Add Toy
+        public void Create(ToyEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.NomEN != null && T.NomFR != null && T.ImagePath != null)
+                    if (T != null && T.NameEN != null && T.NameFR != null && T.ImagePath != null)
                     {
-                        cmd.CommandText = "SP_AjoutJouet";
+                        cmd.CommandText = "SP_AddToy";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter NomEN = new SqlParameter("NomEN", T.NomEN);
-                        SqlParameter NomFR = new SqlParameter("NomFR", T.NomFR);
+                        SqlParameter NameEN = new SqlParameter("NameEN", T.NameEN);
+                        SqlParameter NameFR = new SqlParameter("NameFR", T.NameFR);
                         SqlParameter ImagePath = new SqlParameter("ImagePath", T.ImagePath);
-                        cmd.Parameters.Add(NomEN);
-                        cmd.Parameters.Add(NomFR);
+                        cmd.Parameters.Add(NameEN);
+                        cmd.Parameters.Add(NameFR);
                         cmd.Parameters.Add(ImagePath);
                         c.Open();
                         cmd.ExecuteNonQuery();
@@ -33,14 +33,14 @@ namespace DAL.Services
         }
         #endregion
 
-        #region Suppression Jouet by Id
+        #region Suppression Toy by Id
         public void Delete(int id)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "DELETE FROM Jouets WHERE Id = @Id";
+                    cmd.CommandText = "DELETE FROM Toys WHERE Id = @Id";
                     cmd.Parameters.AddWithValue("@Id", id);
                     c.Open();
                     cmd.ExecuteScalar();
@@ -49,27 +49,27 @@ namespace DAL.Services
         }
         #endregion
 
-        #region Récupération Jouets
-        public List<JouetEntity> GetAll()
+        #region Récupération Toys
+        public List<ToyEntity> GetAll()
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Jouets WHERE Actif = 1";
+                    cmd.CommandText = "SELECT * FROM Toys WHERE Active = 1";
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
-                        List<JouetEntity> L = new List<JouetEntity>();
+                        List<ToyEntity> L = new List<ToyEntity>();
                         while (Tab.Read())
                         {
-                            L.Add(new JouetEntity()
+                            L.Add(new ToyEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                NomEN = Tab["NomEN"].ToString(),
-                                NomFR = Tab["NomFR"].ToString(),
+                                NameEN = Tab["NameEN"].ToString(),
+                                NameFR = Tab["NameFR"].ToString(),
                                 ImagePath = Tab["ImagePath"].ToString(),
-                                Actif = (int)Tab["Actif"]
+                                Active = (int)Tab["Active"]
                             });
                         }
                         return L;
@@ -79,27 +79,27 @@ namespace DAL.Services
         }
         #endregion
 
-        #region Récupération Jouet by Id
-        public JouetEntity GetOne(int id)
+        #region Récupération Toy by Id
+        public ToyEntity GetOne(int id)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Jouets WHERE Id = @Id AND Actif = 1";
+                    cmd.CommandText = "SELECT * FROM Toys WHERE Id = @Id AND Active = 1";
                     cmd.Parameters.AddWithValue("Id", id);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
                         if (Tab.Read())
                         {
-                            JouetEntity S = new JouetEntity()
+                            ToyEntity S = new ToyEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                NomEN = Tab["NomEN"].ToString(),
-                                NomFR = Tab["NomFR"].ToString(),
+                                NameEN = Tab["NameEN"].ToString(),
+                                NameFR = Tab["NameFR"].ToString(),
                                 ImagePath = Tab["ImagePath"].ToString(),
-                                Actif = (int)Tab["Actif"]
+                                Active = (int)Tab["Active"]
                             };
                             return S;
                         }
@@ -110,23 +110,23 @@ namespace DAL.Services
         }
         #endregion
 
-        #region Update Jouet by Id
-        public void Update(int Id, JouetEntity T)
+        #region Update Toy by Id
+        public void Update(int Id, ToyEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.NomEN != null && T.NomFR != null && T.ImagePath != null && Id != 0)
+                    if (T != null && T.NameEN != null && T.NameFR != null && T.ImagePath != null && Id != 0)
                     {
-                        cmd.CommandText = "SP_ModifJouet";
+                        cmd.CommandText = "SP_UpdateToy";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter NomEN = new SqlParameter("NomEN", T.NomEN);
-                        SqlParameter NomFR = new SqlParameter("NomFR", T.NomFR);
+                        SqlParameter NameEN = new SqlParameter("NameEN", T.NameEN);
+                        SqlParameter NameFR = new SqlParameter("NameFR", T.NameFR);
                         SqlParameter ImagePath = new SqlParameter("ImagePath", T.ImagePath);
                         SqlParameter PId = new SqlParameter("Id", Id);
-                        cmd.Parameters.Add(NomFR);
-                        cmd.Parameters.Add(NomEN);
+                        cmd.Parameters.Add(NameFR);
+                        cmd.Parameters.Add(NameEN);
                         cmd.Parameters.Add(ImagePath);
                         cmd.Parameters.Add(PId);
                         c.Open();

@@ -12,7 +12,7 @@ namespace UlalaAPI.Controllers
 {
     public class LoginController : ApiController
     {
-        UtilisateurRepository repo = new UtilisateurRepository();
+        UserRepository repo = new UserRepository();
 
         #region GET Anonyme Token
         /// <summary>
@@ -23,8 +23,8 @@ namespace UlalaAPI.Controllers
         {
             if (HttpContext.Current.Request.UrlReferrer.AbsoluteUri.Contains("http://localhost:4200/"))
             {
-                UtilisateurEntity U = new UtilisateurEntity();
-                U.Role = "Anonyme";
+                UserEntity U = new UserEntity();
+                U.Role = "Anonymous";
                 JWTService jwt = new JWTService("FZeDfgPkyXaDFyMwQfSbIoJhF", "localhost:4200", "localhost:4200");
                 string token = jwt.Encode(U);
                 return Ok(token);
@@ -33,21 +33,21 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region POST Vérification couple pseudo-password
+        #region POST Vérification couple Username-password
         /// <summary>
         /// Post API/Login
         /// </summary>
         /// <param name="User">User à tester</param>
-        public IHttpActionResult Post(UtilisateurModel User)
+        public IHttpActionResult Post(UserModel User)
         {
             if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                if (User == null || User.Password == null || User.Pseudo == null) return BadRequest();
+                if (User == null || User.Password == null || User.Username == null) return BadRequest();
                 else
                 {
-                    if (repo.Check(User.Pseudo, User.Password))
+                    if (repo.Check(User.Username, User.Password))
                     {
-                        UtilisateurEntity U = repo.GetOneByPseudo(User.Pseudo);
+                        UserEntity U = repo.GetOneByUsername(User.Username);
                         JWTService jwt = new JWTService("FZeDfgPkyXaDFyMwQfSbIoJhF", "localhost:4200", "localhost:4200");
                         string token = jwt.Encode(U);
                         return Ok(token);
@@ -101,18 +101,18 @@ namespace UlalaAPI.Controllers
 
         #region POST Changement Mot de passe
         /// <summary>
-        /// Post API/Login/?IdUtilisateur={Id}
+        /// Post API/Login/?IdUser={Id}
         /// </summary>
         /// <param name="User">User à tester</param>
         [HttpPost]
-        public IHttpActionResult PostPass([FromUri]int IdUtilisateur, [FromBody]string NewPassword)
+        public IHttpActionResult PostPass([FromUri]int IdUser, [FromBody]string NewPassword)
         {
             if ((new[] { "Admin", "User" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                if (repo.GetOne(IdUtilisateur) == null || NewPassword == "") return BadRequest();
+                if (repo.GetOne(IdUser) == null || NewPassword == "") return BadRequest();
                 else
                 {
-                    repo.UpdatePassword(IdUtilisateur, NewPassword);
+                    repo.UpdatePassword(IdUser, NewPassword);
                     return Ok();
                 }
             }
@@ -141,20 +141,20 @@ namespace UlalaAPI.Controllers
         }
         #endregion
 
-        #region POST Récupération Pseudo
+        #region POST Récupération Username
         /// <summary>
-        /// Post API/Login/?MailforPseudo={MailforPseudo}
+        /// Post API/Login/?MailforUsername={MailforUsername}
         /// </summary>
         /// <param name="User">User à tester</param>
         [HttpPost]
-        public IHttpActionResult PostPseudo([FromUri]string MailforPseudo)
+        public IHttpActionResult PostUsername([FromUri]string MailforUsername)
         {
             if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                if (repo.GetOneByMail(MailforPseudo) == null || MailforPseudo == "") return BadRequest();
+                if (repo.GetOneByMail(MailforUsername) == null || MailforUsername == "") return BadRequest();
                 else
                 {
-                    repo.RetrievePseudo(MailforPseudo);
+                    repo.RetrieveUsername(MailforUsername);
                     return Ok();
                 }
             }

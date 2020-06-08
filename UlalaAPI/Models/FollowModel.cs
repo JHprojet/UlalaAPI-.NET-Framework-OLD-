@@ -8,7 +8,7 @@ namespace UlalaAPI.Models
     public class FollowModel
     {
         public int Id { get; set; }
-        public UtilisateurModel Followed { get; set; }
-        public UtilisateurModel Follower { get; set; }
+        public UserModel Followed { get; set; }
+        public UserModel Follower { get; set; }
     }
 }

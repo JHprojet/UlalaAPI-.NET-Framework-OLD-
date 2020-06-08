@@ -7,16 +7,16 @@ namespace UlalaAPI.Mapper
     public static class MapperSpecifiques
     {
         #region Map BossZone E to M
-        public static BossZoneModel ToModel(this BossZoneEntity BZE)
+        public static BossesZoneModel ToModel(this BossesZoneEntity BZE)
         {
             if (BZE != null)
             {
                 BossRepository repoBoss = new BossRepository();
                 ZoneRepository repoZone = new ZoneRepository();
-                BossZoneModel BZM = new BossZoneModel();
+                BossesZoneModel BZM = new BossesZoneModel();
                 BZM.Boss = repoBoss.GetOne(BZE.BossId).MapTo<BossModel>();
                 BZM.Zone = repoZone.GetOne(BZE.ZoneId).MapTo<ZoneModel>();
-                BZM.Actif = BZE.Actif;
+                BZM.Active = BZE.Active;
                 BZM.Id = BZE.Id;
                 return BZM;
             }
@@ -25,96 +25,96 @@ namespace UlalaAPI.Mapper
         #endregion
 
         #region Map BossZone M to E
-        public static BossZoneEntity ToEntity(this BossZoneModel BZM)
+        public static BossesZoneEntity ToEntity(this BossesZoneModel BZM)
         {
             if (BZM != null)
             {
-                BossZoneEntity BZE = new BossZoneEntity();
+                BossesZoneEntity BZE = new BossesZoneEntity();
                 BZE.BossId = BZM.Zone.Id;
                 BZE.ZoneId = BZM.Boss.Id;
                 BZE.Id = BZM.Id;
-                BZE.Actif = BZM.Actif;
+                BZE.Active = BZM.Active;
                 return BZE;
             }
             else return null;
         }
         #endregion
 
-        #region Map Enregistrement E to M
-        public static EnregistrementModel ToModel(this EnregistrementEntity EE)
+        #region Map Strategy E to M
+        public static StrategyModel ToModel(this StrategyEntity SE)
         {
-            if (EE != null)
+            if (SE != null)
             {
-                BossZoneRepository repoBZ = new BossZoneRepository();
-                TeamRepository repoTeam = new TeamRepository();
-                UtilisateurRepository repoU = new UtilisateurRepository();
-                EnregistrementModel EM = new EnregistrementModel();
-                EM.Utilisateur = repoU.GetOne(EE.UtilisateurId).MapTo<UtilisateurModel>();
-                EM.Team = repoTeam.GetOne(EE.TeamId).ToModel();
-                EM.BossZone = repoBZ.GetOne(EE.BossZoneId).ToModel();
-                EM.ImagePath1 = EE.ImagePath1;
-                EM.ImagePath2 = EE.ImagePath2;
-                EM.ImagePath3 = EE.ImagePath3;
-                EM.ImagePath4 = EE.ImagePath4;
-                EM.Note = EE.Note;
-                EM.Id = EE.Id;
-                EM.Actif = EE.Actif;
-                return EM;
+                BossesPerZoneRepository repoBZ = new BossesPerZoneRepository();
+                CharactersConfigurationRepository repoCC = new CharactersConfigurationRepository();
+                UserRepository repoU = new UserRepository();
+                StrategyModel SM = new StrategyModel();
+                SM.User = repoU.GetOne(SE.UserId).MapTo<UserModel>();
+                SM.CharactersConfiguration = repoCC.GetOne(SE.CharactersConfigurationId).ToModel();
+                SM.BossZone = repoBZ.GetOne(SE.BossZoneId).ToModel();
+                SM.ImagePath1 = SE.ImagePath1;
+                SM.ImagePath2 = SE.ImagePath2;
+                SM.ImagePath3 = SE.ImagePath3;
+                SM.ImagePath4 = SE.ImagePath4;
+                SM.Note = SE.Note;
+                SM.Id = SE.Id;
+                SM.Active = SE.Active;
+                return SM;
             }
             else return null;
         }
         #endregion
 
-        #region Map Enregistrement M to E
-        public static EnregistrementEntity ToEntity(this EnregistrementModel EM)
+        #region Map Strategy M to E
+        public static StrategyEntity ToEntity(this StrategyModel SM)
         {
-            if (EM != null)
+            if (SM != null)
             {
-                EnregistrementEntity EE = new EnregistrementEntity();
-                EE.UtilisateurId = EM.Utilisateur.Id;
-                EE.TeamId = EM.Team.Id;
-                EE.BossZoneId = EM.BossZone.Id;
-                EE.ImagePath1 = EM.ImagePath1;
-                EE.ImagePath2 = EM.ImagePath2;
-                EE.ImagePath3 = EM.ImagePath3;
-                EE.ImagePath4 = EM.ImagePath4;
-                EE.Note = EM.Note;
-                EE.Id = EM.Id;
-                EE.Actif = EM.Actif;
-                return EE;
+                StrategyEntity SE = new StrategyEntity();
+                SE.UserId = SM.User.Id;
+                SE.CharactersConfigurationId = SM.CharactersConfiguration.Id;
+                SE.BossZoneId = SM.BossZone.Id;
+                SE.ImagePath1 = SM.ImagePath1;
+                SE.ImagePath2 = SM.ImagePath2;
+                SE.ImagePath3 = SM.ImagePath3;
+                SE.ImagePath4 = SM.ImagePath4;
+                SE.Note = SM.Note;
+                SE.Id = SM.Id;
+                SE.Active = SM.Active;
+                return SE;
             }
             else return null;
         }
         #endregion
 
-        #region Map Favori E to M
-        public static FavoriModel ToModel(this FavoriEntity FE)
+        #region Map FavoriteStrategy E to M
+        public static FavoriteStrategyModel ToModel(this FavoriteStrategyEntity FE)
         {
             if (FE != null)
             {
-                EnregistrementRepository repoEnre = new EnregistrementRepository();
-                UtilisateurRepository repoUtil = new UtilisateurRepository();
-                FavoriModel FM = new FavoriModel();
-                FM.Enregistrement = repoEnre.GetOne(FE.EnregistrementId).ToModel();
-                FM.Utilisateur = repoUtil.GetOne(FE.UtilisateurId).MapTo<UtilisateurModel>();
+                StrategyRepository repoEnre = new StrategyRepository();
+                UserRepository repoUtil = new UserRepository();
+                FavoriteStrategyModel FM = new FavoriteStrategyModel();
+                FM.Strategy = repoEnre.GetOne(FE.StrategyId).ToModel();
+                FM.User = repoUtil.GetOne(FE.UserId).MapTo<UserModel>();
                 FM.Id = FE.Id;
-                FM.Actif = FE.Actif;
+                FM.Active = FE.Active;
                 return FM;
             }
             else return null;
         }
         #endregion
 
-        #region Map Favori M to E
-        public static FavoriEntity ToEntity(this FavoriModel FM)
+        #region Map FavoriteStrategy M to E
+        public static FavoriteStrategyEntity ToEntity(this FavoriteStrategyModel FM)
         {
             if (FM != null)
             {
-                FavoriEntity FE = new FavoriEntity();
-                FE.EnregistrementId = FM.Enregistrement.Id;
-                FE.UtilisateurId = FM.Utilisateur.Id;
+                FavoriteStrategyEntity FE = new FavoriteStrategyEntity();
+                FE.StrategyId = FM.Strategy.Id;
+                FE.UserId = FM.User.Id;
                 FE.Id = FM.Id;
-                FE.Actif = FM.Actif;
+                FE.Active = FM.Active;
                 return FE;
             }
             else return null;
@@ -126,14 +126,14 @@ namespace UlalaAPI.Mapper
         {
             if (VE != null)
             {
-                EnregistrementRepository repoEnre = new EnregistrementRepository();
-                UtilisateurRepository repoUtil = new UtilisateurRepository();
+                StrategyRepository repoStr = new StrategyRepository();
+                UserRepository repoUtil = new UserRepository();
                 VoteModel VM = new VoteModel();
-                VM.Enregistrement = repoEnre.GetOne(VE.EnregistrementId).ToModel();
+                VM.Strategy = repoStr.GetOne(VE.StrategyId).ToModel();
                 VM.Id = VE.Id;
-                VM.Utilisateur = repoUtil.GetOne(VE.UtilisateurId).MapTo<UtilisateurModel>();
+                VM.User = repoUtil.GetOne(VE.UserId).MapTo<UserModel>();
                 VM.Vote = VE.Vote;
-                VM.Actif = VE.Actif;
+                VM.Active = VE.Active;
                 return VM;
             }
             else return null;
@@ -146,11 +146,11 @@ namespace UlalaAPI.Mapper
             if (VM != null)
             {
                 VoteEntity VE = new VoteEntity();
-                VE.EnregistrementId = VM.Enregistrement.Id;
-                VE.UtilisateurId = VM.Utilisateur.Id;
+                VE.StrategyId = VM.Strategy.Id;
+                VE.UserId = VM.User.Id;
                 VE.Id = VM.Id;
                 VE.Vote = VM.Vote;
-                VE.Actif = VM.Actif;
+                VE.Active = VM.Active;
                 return VE;
             }
             else return null;
@@ -165,15 +165,15 @@ namespace UlalaAPI.Mapper
                 ClasseRepository repoCl = new ClasseRepository();
                 SkillModel SM = new SkillModel();
                 SM.Id = SE.Id;
-                SM.NomEN = SE.NomEN;
-                SM.NomFR = SE.NomFR;
-                SM.DescEN = SE.DescEN;
-                SM.DescFR = SE.DescFR;
+                SM.NameEN = SE.NameEN;
+                SM.NameFR = SE.NameFR;
+                SM.DescriptionEN = SE.DescriptionEN;
+                SM.DescriptionFR = SE.DescriptionFR;
                 SM.Location = SE.Location;
                 SM.Cost = SE.Cost;
                 SM.ImagePath = SE.ImagePath;
                 SM.Classe = repoCl.GetOne(SE.ClasseId).MapTo<ClasseModel>();
-                SM.Actif = SE.Actif;
+                SM.Active = SE.Active;
                 return SM;
             }
             else return null;
@@ -187,16 +187,53 @@ namespace UlalaAPI.Mapper
             {
                 SkillEntity SE = new SkillEntity();
                 SE.Id = SM.Id;
-                SE.NomEN = SM.NomEN;
-                SE.NomFR = SM.NomFR;
-                SE.DescEN = SM.DescEN;
-                SE.DescFR = SM.DescFR;
+                SE.NameEN = SM.NameEN;
+                SE.NameFR = SM.NameFR;
+                SE.DescriptionEN = SM.DescriptionEN;
+                SE.DescriptionFR = SM.DescriptionFR;
                 SE.Location = SM.Location;
                 SE.Cost = SM.Cost;
                 SE.ImagePath = SM.ImagePath;
                 SE.ClasseId = SM.Classe.Id;
-                SE.Actif = SM.Actif;
+                SE.Active = SM.Active;
                 return SE;
+            }
+            else return null;
+        }
+        #endregion
+
+        #region Map CharactersConfiguration E to M
+        public static CharactersConfigurationModel ToModel(this CharactersConfigurationEntity CCE)
+        {
+            if (CCE != null)
+            {
+                ClasseRepository repoCl = new ClasseRepository();
+                CharactersConfigurationModel CCM = new CharactersConfigurationModel();
+                CCM.Id = CCE.Id;
+                CCM.Classe1 = repoCl.GetOne(CCE.ClasseId1).MapTo<ClasseModel>();
+                CCM.Classe2 = repoCl.GetOne(CCE.ClasseId2).MapTo<ClasseModel>();
+                CCM.Classe3 = repoCl.GetOne(CCE.ClasseId3).MapTo<ClasseModel>();
+                CCM.Classe4 = repoCl.GetOne(CCE.ClasseId4).MapTo<ClasseModel>();
+                CCM.Active = CCE.Active;
+                return CCM;
+            }
+            else return null;
+        }
+        #endregion
+
+        #region Map CharactersConfiguration M to E
+        public static CharactersConfigurationEntity ToEntity(this CharactersConfigurationModel CCM)
+        {
+            if (CCM != null)
+            {
+                CharactersConfigurationEntity CCE = new CharactersConfigurationEntity();
+                CCE.Id = CCM.Id;
+                CCE.ClasseId1 = CCM.Classe1.Id;
+                CCE.ClasseId2 = CCM.Classe2.Id;
+                CCE.ClasseId3 = CCM.Classe3.Id;
+                CCE.ClasseId4 = CCM.Classe4.Id;
+                CCE.Active = CCM.Active;
+                return CCE;
             }
             else return null;
         }
@@ -207,14 +244,16 @@ namespace UlalaAPI.Mapper
         {
             if (TE != null)
             {
-                ClasseRepository repoCl = new ClasseRepository();
+                ZoneRepository repoZ = new ZoneRepository();
+                UserRepository repoU = new UserRepository();
+                CharactersConfigurationRepository repoCC = new CharactersConfigurationRepository();
                 TeamModel TM = new TeamModel();
                 TM.Id = TE.Id;
-                TM.Classe1 = repoCl.GetOne(TE.ClasseId1).MapTo<ClasseModel>();
-                TM.Classe2 = repoCl.GetOne(TE.ClasseId2).MapTo<ClasseModel>();
-                TM.Classe3 = repoCl.GetOne(TE.ClasseId3).MapTo<ClasseModel>();
-                TM.Classe4 = repoCl.GetOne(TE.ClasseId4).MapTo<ClasseModel>();
-                TM.Actif = TE.Actif;
+                TM.CharactersConfiguration = repoCC.GetOne(TE.CharactersConfigurationId).ToModel();
+                TM.TeamName = TE.TeamName;
+                TM.Zone = repoZ.GetOne(TE.ZoneId).MapTo<ZoneModel>();
+                TM.User = repoU.GetOne(TE.UserId).MapTo<UserModel>();
+                TM.Active = TE.Active;
                 return TM;
             }
             else return null;
@@ -228,50 +267,11 @@ namespace UlalaAPI.Mapper
             {
                 TeamEntity TE = new TeamEntity();
                 TE.Id = TM.Id;
-                TE.ClasseId1 = TM.Classe1.Id;
-                TE.ClasseId2 = TM.Classe2.Id;
-                TE.ClasseId3 = TM.Classe3.Id;
-                TE.ClasseId4 = TM.Classe4.Id;
-                TE.Actif = TM.Actif;
-                return TE;
-            }
-            else return null;
-        }
-        #endregion
-
-        #region Map MaTeam E to M
-        public static MesTeamsModel ToModel(this MesTeamsEntity TE)
-        {
-            if (TE != null)
-            {
-                ZoneRepository repoZ = new ZoneRepository();
-                UtilisateurRepository repoU = new UtilisateurRepository();
-                TeamRepository repoT = new TeamRepository();
-                MesTeamsModel TM = new MesTeamsModel();
-                TM.Id = TE.Id;
-                TM.Team = repoT.GetOne(TE.TeamId).ToModel();
-                TM.NomTeam = TE.NomTeam;
-                TM.Zone = repoZ.GetOne(TE.ZoneId).MapTo<ZoneModel>();
-                TM.Utilisateur = repoU.GetOne(TE.UtilisateurId).MapTo<UtilisateurModel>();
-                TM.Actif = TE.Actif;
-                return TM;
-            }
-            else return null;
-        }
-        #endregion
-
-        #region Map MaTeam M to E
-        public static MesTeamsEntity ToEntity(this MesTeamsModel TM)
-        {
-            if (TM != null)
-            {
-                MesTeamsEntity TE = new MesTeamsEntity();
-                TE.Id = TM.Id;
-                TE.TeamId = TM.Team.Id;
-                TE.NomTeam = TM.NomTeam;
+                TE.CharactersConfigurationId = TM.CharactersConfiguration.Id;
+                TE.TeamName = TM.TeamName;
                 TE.ZoneId = TM.Zone.Id;
-                TE.UtilisateurId = TM.Utilisateur.Id;
-                TE.Actif = TM.Actif;
+                TE.UserId = TM.User.Id;
+                TE.Active = TM.Active;
                 return TE;
             }
             else return null;
@@ -283,10 +283,10 @@ namespace UlalaAPI.Mapper
         {
             if (FE != null)
             {
-                UtilisateurRepository repoU = new UtilisateurRepository();
+                UserRepository repoU = new UserRepository();
                 FollowModel FM = new FollowModel();
-                FM.Followed = repoU.GetOne(FE.FollowedId).MapTo<UtilisateurModel>();
-                FM.Follower = repoU.GetOne(FE.FollowerId).MapTo<UtilisateurModel>();
+                FM.Followed = repoU.GetOne(FE.FollowedId).MapTo<UserModel>();
+                FM.Follower = repoU.GetOne(FE.FollowerId).MapTo<UserModel>();
                 return FM;
             }
             else return null;

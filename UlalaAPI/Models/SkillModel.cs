@@ -3,14 +3,14 @@
     public class SkillModel
     {
         public int Id { get; set; }
-        public string NomFR { get; set; }
-        public string NomEN { get; set; }
-        public string DescFR { get; set; }
-        public string DescEN { get; set; }
+        public string NameFR { get; set; }
+        public string NameEN { get; set; }
+        public string DescriptionFR { get; set; }
+        public string DescriptionEN { get; set; }
         public int Cost { get; set; }
         public string Location { get; set; }
         public ClasseModel Classe { get; set; }
         public string ImagePath { get; set; }
-        public int Actif { get; set; }
+        public int Active { get; set; }
     }
 }

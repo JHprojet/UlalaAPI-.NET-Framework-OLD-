@@ -8,22 +8,22 @@ namespace DAL.Services
 {
     public class VoteRepository
     {
-        #region Ajout Vote
+        #region Add Vote
         public void Create(VoteEntity T)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T != null && T.UtilisateurId != 0 && T.EnregistrementId != 0)
+                    if (T != null && T.UserId != 0 && T.StrategyId != 0)
                     {
-                        cmd.CommandText = "SP_AjoutVote";
+                        cmd.CommandText = "SP_AddVote";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter UtilisateurId = new SqlParameter("UtilisateurId", T.UtilisateurId);
-                        SqlParameter EnregistrementId = new SqlParameter("EnregistrementId", T.EnregistrementId);
+                        SqlParameter UserId = new SqlParameter("UserId", T.UserId);
+                        SqlParameter StrategyId = new SqlParameter("StrategyId", T.StrategyId);
                         SqlParameter Vote = new SqlParameter("Vote", T.Vote);
-                        cmd.Parameters.Add(UtilisateurId);
-                        cmd.Parameters.Add(EnregistrementId);
+                        cmd.Parameters.Add(UserId);
+                        cmd.Parameters.Add(StrategyId);
                         cmd.Parameters.Add(Vote);
                         c.Open();
                         cmd.ExecuteNonQuery();
@@ -56,7 +56,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Votes WHERE Actif = 1";
+                    cmd.CommandText = "SELECT * FROM Votes WHERE Active = 1";
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
@@ -66,10 +66,10 @@ namespace DAL.Services
                             L.Add(new VoteEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                EnregistrementId = (int)Tab["EnregistrementId"],
+                                StrategyId = (int)Tab["StrategyId"],
                                 Vote = (int)Tab["Vote"],
-                                UtilisateurId = (int)Tab["UtilisateurId"],
-                                Actif = (int)Tab["Actif"]
+                                UserId = (int)Tab["UserId"],
+                                Active = (int)Tab["Active"]
                             });
                         }
                         return L;
@@ -79,15 +79,15 @@ namespace DAL.Services
         }
         #endregion
 
-        #region Récupération Votes by UtilisateurId
-        public List<VoteEntity> GetAllbyUtilisateurId(int UtilisateurId)
+        #region Récupération Votes by UserId
+        public List<VoteEntity> GetAllbyUserId(int UserId)
         {
             using (SqlConnection c = new SqlConnection(ConfigurationManager.ConnectionStrings["API"].ConnectionString))
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Votes WHERE Actif = 1 AND UtilisateurId = @UtilisateurId";
-                    cmd.Parameters.AddWithValue("UtilisateurId", UtilisateurId);
+                    cmd.CommandText = "SELECT * FROM Votes WHERE Active = 1 AND UserId = @UserId";
+                    cmd.Parameters.AddWithValue("UserId", UserId);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
                     {
@@ -97,10 +97,10 @@ namespace DAL.Services
                             L.Add(new VoteEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                EnregistrementId = (int)Tab["EnregistrementId"],
+                                StrategyId = (int)Tab["StrategyId"],
                                 Vote = (int)Tab["Vote"],
-                                UtilisateurId = (int)Tab["UtilisateurId"],
-                                Actif = (int)Tab["Actif"]
+                                UserId = (int)Tab["UserId"],
+                                Active = (int)Tab["Active"]
                             });
                         }
                         return L;
@@ -117,7 +117,7 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM Votes WHERE Id = @Id AND Actif = 1";
+                    cmd.CommandText = "SELECT * FROM Votes WHERE Id = @Id AND Active = 1";
                     cmd.Parameters.AddWithValue("Id", id);
                     c.Open();
                     using (SqlDataReader Tab = cmd.ExecuteReader())
@@ -127,10 +127,10 @@ namespace DAL.Services
                             VoteEntity S = new VoteEntity()
                             {
                                 Id = (int)Tab["Id"],
-                                EnregistrementId = (int)Tab["EnregistrementId"],
+                                StrategyId = (int)Tab["StrategyId"],
                                 Vote = (int)Tab["Vote"],
-                                UtilisateurId = (int)Tab["UtilisateurId"],
-                                Actif = (int)Tab["Actif"]
+                                UserId = (int)Tab["UserId"],
+                                Active = (int)Tab["Active"]
                             };
                             return S;
                         }
@@ -148,17 +148,17 @@ namespace DAL.Services
             {
                 using (SqlCommand cmd = c.CreateCommand())
                 {
-                    if (T.UtilisateurId != 0 && T.EnregistrementId != 0 && Id != 0 && T.UtilisateurId != 0)
+                    if (T.UserId != 0 && T.StrategyId != 0 && Id != 0 && T.UserId != 0)
                     {
-                        cmd.CommandText = "SP_ModifVote";
+                        cmd.CommandText = "SP_UpdateVote";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        SqlParameter UtilisateurId = new SqlParameter("UtilisateurId", T.UtilisateurId);
+                        SqlParameter UserId = new SqlParameter("UserId", T.UserId);
                         SqlParameter Vote = new SqlParameter("Vote", T.Vote);
-                        SqlParameter EnregistrementId = new SqlParameter("EnregistrementId", T.EnregistrementId);
+                        SqlParameter StrategyId = new SqlParameter("StrategyId", T.StrategyId);
                         SqlParameter PId = new SqlParameter("Id", Id);
-                        cmd.Parameters.Add(UtilisateurId);
+                        cmd.Parameters.Add(UserId);
                         cmd.Parameters.Add(Vote);
-                        cmd.Parameters.Add(EnregistrementId);
+                        cmd.Parameters.Add(StrategyId);
                         cmd.Parameters.Add(PId);
                         c.Open();
                         cmd.ExecuteNonQuery();

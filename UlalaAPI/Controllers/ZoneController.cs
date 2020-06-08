@@ -14,7 +14,7 @@ namespace UlalaAPI.Controllers
     {
         ZoneRepository repo = new ZoneRepository();
 
-        #region POST Ajout d'une Zone
+        #region POST Add d'une Zone
         /// <summary>
         /// Post API/Zone
         /// </summary>
@@ -23,7 +23,7 @@ namespace UlalaAPI.Controllers
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                if (Zone == null || Zone.ContinentEN == null || Zone.ContinentFR == null || Zone.ZoneEN == null || Zone.ZoneFR == null || Zone.NbZones == 0) return BadRequest();
+                if (Zone == null || Zone.ContinentEN == null || Zone.ContinentFR == null || Zone.ZoneEN == null || Zone.ZoneFR == null || Zone.ZoneQty == 0) return BadRequest();
                 else
                 {
                     repo.Create(Zone.MapTo<ZoneEntity>());
@@ -38,14 +38,14 @@ namespace UlalaAPI.Controllers
         /// <summary>
         /// Get API/Zone
         /// </summary>
-        /// <returns>Liste de tous les zones</returns>
+        /// <returns>List de tous les zones</returns>
         public IHttpActionResult Get()
         {
             if ((new[] { "Admin", "User", "Anonyme" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
-                IEnumerable<ZoneModel> Liste = repo.GetAll().Select(Zone => Zone?.MapTo<ZoneModel>());
-                if (Liste.Count() == 0) return NotFound();
-                else return Json(Liste);
+                IEnumerable<ZoneModel> List = repo.GetAll().Select(Zone => Zone?.MapTo<ZoneModel>());
+                if (List.Count() == 0) return NotFound();
+                else return Json(List);
             }
             else return Unauthorized();
         }
@@ -94,13 +94,13 @@ namespace UlalaAPI.Controllers
         /// Put API/Zone/{id}
         /// </summary>
         /// <param name="Zone">Zone à insérer</param>
-        /// <param name="id">Id de la Zone à modifier</param>
+        /// <param name="id">Id de la Zone à Updateier</param>
         public IHttpActionResult Put(int id, ZoneModel Zone)
         {
             if ((new[] { "Admin" }).Contains(ValidateTokenAndRole.ValidateAndGetRole(Request), StringComparer.OrdinalIgnoreCase))
             {
                 if (repo.GetOne(id) == null) return NotFound();
-                else if (Zone.ContinentFR == null || Zone.ContinentEN == null || Zone.ZoneFR == null || Zone.ZoneEN == null || Zone.NbZones == 0) return BadRequest();
+                else if (Zone.ContinentFR == null || Zone.ContinentEN == null || Zone.ZoneFR == null || Zone.ZoneEN == null || Zone.ZoneQty == 0) return BadRequest();
                 else
                 {
                     repo.Update(id, Zone.MapTo<ZoneEntity>());
